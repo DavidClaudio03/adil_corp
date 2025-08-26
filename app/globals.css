@@ -1,0 +1,164 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Updated color tokens for white background with new color palette */
+  --background: #ffffff; /* White background */
+  --foreground: #000000; /* Black text */
+  --card: rgba(255, 255, 255, 0.9); /* White glassmorphism card */
+  --card-foreground: #000000; /* Black card content */
+  --popover: rgba(255, 255, 255, 0.95); /* White glassmorphism popover */
+  --popover-foreground: #000000; /* Black popover text */
+  --primary: #543fb2; /* Primary purple for buttons */
+  --primary-foreground: #ffffff; /* White text on primary */
+  --secondary: #160a2a; /* Dark purple secondary backgrounds */
+  --secondary-foreground: #ffffff; /* White text on secondary */
+  --muted: rgba(0, 0, 0, 0.6); /* Muted black */
+  --muted-foreground: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
+  --accent: #7dccdb; /* Light blue accent */
+  --accent-foreground: #000000; /* Black accent text */
+  --destructive: #dc2626; /* Red for destructive actions */
+  --destructive-foreground: #ffffff; /* White destructive text */
+  --border: rgba(0, 0, 0, 0.1); /* Subtle black border */
+  --input: rgba(0, 0, 0, 0.05); /* Light input background */
+  --ring: rgba(84, 63, 178, 0.5); /* Purple focus ring */
+  --chart-1: #543fb2; /* Primary purple chart */
+  --chart-2: #7dccdb; /* Light blue chart */
+  --chart-3: #160a2a; /* Dark purple chart */
+  --chart-4: #0b0711; /* Deep blue chart */
+  --chart-5: #5e3ac1; /* Purple variant chart */
+  --radius: 0.75rem; /* Rounded corners */
+  --sidebar: #ffffff; /* White sidebar */
+  --sidebar-foreground: #000000; /* Black sidebar text */
+  --sidebar-primary: #543fb2; /* Purple sidebar primary */
+  --sidebar-primary-foreground: #ffffff; /* White sidebar primary text */
+  --sidebar-accent: #7dccdb; /* Blue sidebar accent */
+  --sidebar-accent-foreground: #000000; /* Black sidebar accent text */
+  --sidebar-border: rgba(0, 0, 0, 0.1); /* Subtle sidebar border */
+  --sidebar-ring: rgba(84, 63, 178, 0.5); /* Purple sidebar focus ring */
+}
+
+.dark {
+  /* Dark mode maintains same white-based theme for consistency */
+  --background: #ffffff;
+  --foreground: #000000;
+  --card: rgba(255, 255, 255, 0.9);
+  --card-foreground: #000000;
+  --popover: rgba(255, 255, 255, 0.95);
+  --popover-foreground: #000000;
+  --primary: #543fb2;
+  --primary-foreground: #ffffff;
+  --secondary: #160a2a;
+  --secondary-foreground: #ffffff;
+  --muted: rgba(0, 0, 0, 0.6);
+  --muted-foreground: rgba(0, 0, 0, 0.7);
+  --accent: #7dccdb;
+  --accent-foreground: #000000;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: rgba(0, 0, 0, 0.1);
+  --input: rgba(0, 0, 0, 0.05);
+  --ring: rgba(84, 63, 178, 0.5);
+  --chart-1: #543fb2;
+  --chart-2: #7dccdb;
+  --chart-3: #160a2a;
+  --chart-4: #0b0711;
+  --chart-5: #5e3ac1;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #000000;
+  --sidebar-primary: #543fb2;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #7dccdb;
+  --sidebar-accent-foreground: #000000;
+  --sidebar-border: rgba(0, 0, 0, 0.1);
+  --sidebar-ring: rgba(84, 63, 178, 0.5);
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Updated glassmorphism and glow effects for white background theme */
+@layer utilities {
+  .glassmorphism {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  }
+
+  .glow-purple {
+    box-shadow: 0 0 20px rgba(84, 63, 178, 0.3);
+  }
+
+  .glow-blue {
+    box-shadow: 0 0 20px rgba(125, 204, 219, 0.3);
+  }
+
+
+  .gradient-secondary {
+    background: linear-gradient(135deg, #160a2a 0%, #5e3ac1 100%);
+  }
+
+  .gradient-accent {
+    background: linear-gradient(135deg, #0b0711 0%, #7cc1d5 100%);
+  }
+
+  .gradient-radial-light {
+    background: radial-gradient(
+      circle at center,
+      rgba(84, 63, 178, 0.1) 0%,
+      rgba(125, 204, 219, 0.05) 70%,
+      #ffffff 100%
+    );
+  }
+}
