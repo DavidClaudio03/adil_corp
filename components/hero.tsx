@@ -1,16 +1,16 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, easeOut } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Calendar, TrendingUp, Clock, Car, BarChart3 } from "lucide-react"
 
 interface HeroProps {
-  title?: string
-  subtitle?: string
-  primaryButtonText?: string
-  secondaryButtonText?: string
-  description?: string
-  backgroundImage?: string
+  readonly title?: string
+  readonly subtitle?: string
+  readonly primaryButtonText?: string
+  readonly secondaryButtonText?: string
+  readonly description?: string
+  readonly backgroundImage?: string
 }
 
 export default function Hero({
@@ -39,7 +39,7 @@ export default function Hero({
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut",
+        ease: easeOut,
       },
     },
   }
@@ -53,9 +53,8 @@ export default function Hero({
   }
 
   return (
-    <section
+    <header
       className="relative min-h-screen flex flex-col justify-center overflow-hidden pt-20"
-      role="banner"
       aria-labelledby="hero-title"
     >
       {/* Background Image */}
@@ -188,6 +187,6 @@ export default function Hero({
           </motion.p>
         </div>
       </motion.div>
-    </section>
+    </header>
   )
 }
