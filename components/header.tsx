@@ -5,8 +5,8 @@ import { motion } from "framer-motion"
 import { Menu, X } from "lucide-react"
 
 interface HeaderProps {
-  logoText?: string
-  menuItems?: Array<{ label: string; href: string }>
+  readonly logoText?: string
+  readonly menuItems?: ReadonlyArray<Readonly<{ label: string; href: string }>>
 }
 
 export default function Header({
