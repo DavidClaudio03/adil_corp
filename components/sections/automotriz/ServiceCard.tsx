@@ -1,0 +1,63 @@
+"use client";
+
+import { memo } from "react";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { CheckCircle, Shield, ArrowRight } from "lucide-react";
+import type { AutoService } from "@/types/automotriz";
+
+type Props = Readonly<{ service: AutoService }>;
+
+function IconByName({ name }: { name: AutoService["icon"] }) {
+    if (name === "shield") return <Shield className="h-8 w-8 text-secondary group-hover:rotate-12 transition-transform duration-300" />;
+    return <CheckCircle className="h-8 w-8 text-primary group-hover:rotate-12 transition-transform duration-300" />;
+}
+
+export default memo(function ServiceCard({ service }: Props) {
+    const isPrimary = service.accent === "primary";
+    const accentBg = isPrimary ? "bg-primary/10 group-hover:bg-primary/20" : "bg-secondary/10 group-hover:bg-secondary/20";
+    const gradientShadow = isPrimary ? "hover:shadow-primary/20" : "hover:shadow-secondary/20";
+    const gradientBorder = "gradient-border"; // clase existente en tu CSS
+
+    return (
+        <div className={`${gradientBorder} group hover:scale-105 transition-all duration-500 hover:shadow-2xl ${gradientShadow}`}>
+            <Card className="gradient-border-content border-0 h-full">
+                <CardContent className="p-8">
+                    <div className="relative mb-6 overflow-hidden rounded-2xl futuristic-image-container">
+                        <Image
+                            src={service.imageSrc}
+                            alt={service.imageAlt}
+                            width={1280}
+                            height={720}
+                            className="w-full h-48 object-cover futuristic-image"
+                            loading="lazy"
+                        />
+                        <div className="futuristic-overlay" />
+                    </div>
+
+                    <div className="flex items-center mb-4">
+                        <div className={`p-3 rounded-lg mr-4 transition-all duration-300 group-hover:scale-110 ${accentBg}`}>
+                            <IconByName name={service.icon} />
+                        </div>
+                        <h3 className="text-2xl font-bold">{service.title}</h3>
+                    </div>
+
+                    <p className="text-muted-foreground mb-6 text-pretty">
+                        {service.description}
+                    </p>
+
+                    <Button
+                        className={`w-full group ${service.ctaVariant === "outline"
+                            ? "border-secondary text-secondary hover:bg-secondary/10 bg-transparent"
+                            : "bg-gradient-to-r from-primary to-secondary hover:opacity-90"} transition-all duration-300 hover:scale-105`}
+                        variant={service.ctaVariant ?? "default"}
+                    >
+                        {service.ctaLabel}
+                        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
+                    </Button>
+                </CardContent>
+            </Card>
+        </div>
+    );
+});
