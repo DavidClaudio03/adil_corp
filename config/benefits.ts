@@ -1,4 +1,4 @@
-import { Clock, Shield, CheckCircle, TrendingUp } from "lucide-react";
+import { Clock, Shield, CheckCircle, TrendingUp, Badge } from "lucide-react";
 import type { BenefitItem } from "@/types/benefits";
 
 export const BENEFITS: ReadonlyArray<BenefitItem> = [
@@ -29,5 +29,6 @@ export const BENEFITS: ReadonlyArray<BenefitItem> = [
 ] as const;
 
 export const BENEFITS_COPY = {
+  BadgeText: "Ventajas de trabajar con nosotros",
   heading: "¿Por qué elegir ADIL CORP?",
 } as const;

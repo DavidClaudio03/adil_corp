@@ -91,13 +91,17 @@ export default function Hero({
                         <motion.div variants={buttonVariants} whileHover="hover" whileTap="tap" className="w-full sm:w-auto max-w-xs">
                             <Button
                                 size="default"
-                                className="bg-gradient-to-r from-[#543fb2] to-[#7dccdb] text-white px-3 xs:px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-semibold rounded-lg border-0 shadow-lg hover:shadow-xl hover:from-[#160A2A] hover:to-[#543fb2] transition-all duration-300 group w-full sm:w-auto"
+                                className="bg-gradient-to-r from-[#543fb2] from-[60%] to-[#8acbef] to-[100%] text-white px-3 xs:px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-semibold rounded-lg border-0 shadow-lg hover:shadow-xl hover:from-[#543fb2] hover:to-[#543fb2] transition-all duration-300 group w-full sm:w-auto"
                                 aria-label="Reservar servicio automotriz"
-                                style={{ wordBreak: "break-word", hyphens: "auto" }}
+                                style={{ wordBreak: 'break-word', hyphens: 'auto' }}
                             >
-                                <Calendar className="mr-1 h-3 w-3 xs:h-4 xs:w-4 flex-shrink-0" aria-hidden="true" />
+                                <Calendar
+                                    className="mr-1 h-3 w-3 xs:h-4 xs:w-4 flex-shrink-0"
+                                    aria-hidden="true"
+                                />
                                 <span className="text-center leading-tight">{primaryButtonText}</span>
                             </Button>
+
                         </motion.div>
 
                         <motion.div variants={buttonVariants} whileHover="hover" whileTap="tap" className="w-full sm:w-auto max-w-xs">

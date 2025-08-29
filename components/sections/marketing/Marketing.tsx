@@ -11,7 +11,7 @@ export default function Marketing() {
     useRevealOnScroll([marketingRef]);
 
     return (
-        <section ref={marketingRef} id="marketing" className="py-16 px-4 sm:px-6 lg:px-8">
+        <section ref={marketingRef} id="marketing" className="py-6 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
                 <MarketingHero
                     badgeText={MARKETING_HERO.badgeText}

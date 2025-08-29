@@ -30,7 +30,7 @@ export default function MechanicsHero({
     ctaLabel = "Reserva tu Servicio",
 }: Props) {
     return (
-        <motion.div className="text-center mb-12 py-16 relative" variants={containerVariants} initial="hidden" animate="visible">
+        <motion.div className="text-center mb-10 py-10 relative" variants={containerVariants} initial="hidden" animate="visible">
             <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-secondary/5 rounded-3xl" />
             <div className="relative z-10">
                 <div className="relative mb-8 overflow-hidden rounded-3xl futuristic-image-container max-w-4xl mx-auto">
@@ -62,11 +62,12 @@ export default function MechanicsHero({
                 <motion.div variants={itemVariants}>
                     <Button
                         size="lg"
-                        className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 animate-pulse hover:animate-none hover:scale-110 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/30 group"
+                        className="gradient-tertiary animate-gradient-x-ltr hover:opacity-90 hover:animate-none hover:scale-110 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/30 group"
                     >
                         {ctaLabel}
                         <Wrench className="ml-2 h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />
                     </Button>
+
                 </motion.div>
             </div>
         </motion.div>

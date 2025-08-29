@@ -30,7 +30,7 @@ export default function Footer() {
                 <FooterNav links={FOOTER_LINKS} />
 
                 {/* Derechos reservados */}
-                <div className="mt-12 text-center text-sm text-muted-foreground">
+                <div className="mt-12 text-center text-sm text-primary-foreground">
                     {FOOTER_COPY.rightsPrefix} {year} {FOOTER_COPY.rightsSuffix}
                 </div>
             </div>

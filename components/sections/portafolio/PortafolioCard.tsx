@@ -12,15 +12,16 @@ export default memo(function PortfolioCard({ item }: Props) {
 
     // estilos derivados sin cambiar tu look & feel
     const borderClass = isPrimary
-        ? "glassmorphism border-primary/20 hover:border-primary/40"
-        : "glassmorphism border-secondary/20 hover:border-secondary/40";
+        ? "glassmorphism border-primary/40 hover:border-primary/60"
+        : "glassmorphism border-secondary/40 hover:border-secondary/60";
     const metricColor = isPrimary ? "text-secondary" : "text-primary";
+    const gradientShadow = isPrimary ? "hover:shadow-primary/60" : "hover:shadow-secondary/60";
     const gradientBox = isPrimary
         ? "bg-gradient-to-r from-primary to-secondary"
         : "bg-gradient-to-r from-secondary to-primary";
 
     return (
-        <Card className={`${borderClass} transition-all duration-300 hover:scale-105 hover:shadow-xl group`}>
+        <Card className={`${borderClass} transition-all duration-300 hover:scale-105 hover:shadow-xl group ${gradientShadow}`}>
             <CardContent className="p-6">
                 <div className="flex items-center mb-4">
                     <div className={`w-12 h-12 ${gradientBox} rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300`}>

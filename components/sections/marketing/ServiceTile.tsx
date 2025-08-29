@@ -12,13 +12,13 @@ type Props = Readonly<{
 export default memo(function ServiceTile({ service, index }: Props) {
     return (
         <Card
-            className="gradient-border hover:scale-105 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20 group animate-fade-in-up"
+            className="gradient-border hover:scale-105 transition-all duration-500 hover:shadow-2xl hover:shadow-tertiary/60 group animate-fade-in-up"
             style={{ animationDelay: `${index * 0.1}s` }}
         >
             <div className="gradient-border-content">
                 <CardContent className="p-6 text-center">
                     <div className="flex justify-center mb-4">
-                        <div className="w-12 h-12 bg-gradient-to-r from-secondary to-primary rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
+                        <div className="w-12 h-12 bg-[#ED0086] from-primary to-tertiary rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
                             <service.icon className="h-6 w-6 text-white" />
                         </div>
                     </div>

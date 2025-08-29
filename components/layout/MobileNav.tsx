@@ -27,7 +27,7 @@ export default function MobileNav({ isOpen, items, onClose }: MobileNavProps) {
                     <motion.a
                         key={item.href}
                         href={item.href}
-                        className="text-muted-foreground hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all duration-300 hover:bg-secondary/90"
+                        className="text-muted-foreground hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all duration-300 hover:bg-primary/100"
                         onClick={onClose}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}

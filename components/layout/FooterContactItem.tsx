@@ -16,9 +16,9 @@ export default memo(function FooterContactItem({ item }: Props) {
             className="flex flex-col items-center group hover:scale-105 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[--color-ring] rounded-md p-2"
             aria-label={item.srOnly ?? `${item.label}: ${item.value}`}
         >
-            <item.icon className="h-8 w-8 mb-2 text-secondary group-hover:rotate-12 transition-transform duration-300" />
+            <item.icon className="h-8 w-8 mb-2 text-primary group-hover:rotate-12 transition-transform duration-300" />
             <p className="font-semibold">{item.label}</p>
-            <p className="text-sm text-muted-foreground">{item.value}</p>
+            <p className="text-sm text-primary-foreground">{item.value}</p>
         </Wrapper>
     );
 });

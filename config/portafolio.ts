@@ -26,6 +26,7 @@ export const CASE_STUDIES: ReadonlyArray<CaseStudy> = [
 
 // Encabezado + CTA de la sección (por si luego se localiza)
 export const PORTFOLIO_COPY = {
+  badgeText: "Portafolio",
   heading: "Casos de Éxito",
   subheading: "Proyectos que han transformado negocios en Quito",
   ctaLabel: "Solicita tu Propuesta",

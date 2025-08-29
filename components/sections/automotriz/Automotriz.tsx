@@ -15,7 +15,7 @@ export default function Automotriz() {
     return (
         <div className="min-h-screen bg-background">
             {/* Automotive Services Section */}
-            <section ref={servicesRef} id="servicios" className="py-16 px-4 sm:px-6 lg:px-8">
+            <section ref={servicesRef} id="servicios" className="py-8 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto">
                     <div className="text-center mb-12">
                         <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gradient">
@@ -26,7 +26,7 @@ export default function Automotriz() {
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-2 gap-8 mb-16">
+                    <div className="grid md:grid-cols-2 gap-8 mb-12">
                         {AUTO_SERVICES.map(svc => (
                             <ServiceCard key={svc.id} service={svc} />
                         ))}

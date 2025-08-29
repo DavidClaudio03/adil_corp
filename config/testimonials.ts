@@ -31,6 +31,7 @@ export const TESTIMONIALS: ReadonlyArray<Testimonial> = [
 ] as const;
 
 export const TESTIMONIALS_COPY = {
+  badgeText: "Testimonios",
   heading: "LO QUE DICEN NUESTROS CLIENTES",
   subheading: "Testimonios reales de empresarios que confiaron en nosotros",
   primaryCta: "Reserva tu Servicio Automotriz",

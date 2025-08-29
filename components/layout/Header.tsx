@@ -51,12 +51,12 @@ export default function Header({
 
                     {/* Desktop Menu */}
                     <div className="hidden md:block">
-                        <div className="ml-10 flex items-baseline space-x-8">
+                        <div className="ml-10 flex items-baseline space-x-6">
                             {menuItems.map((item, index) => (
                                 <motion.a
                                     key={item.href}
                                     href={item.href}
-                                    className="text-muted-foreground hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:bg-secondary/90 relative group"
+                                    className="text-muted-foreground hover:text-white px-3 py-2 rounded-md text-sm font-bold transition-all duration-300 hover:bg-primary/100 relative group"
                                     whileHover={{ scale: 1.05 }}
                                     initial={{ opacity: 0, y: -20 }}
                                     animate={{ opacity: 1, y: 0 }}

@@ -1,3 +1,4 @@
+import { Badge } from "lucide-react";
 import type { ComponentType } from "react";
 
 export type PfIcon = ComponentType<{ className?: string }>;
@@ -11,3 +12,4 @@ export type CaseStudy = Readonly<{
   accent: "primary" | "secondary";
   icon: PfIcon;         // lucide-react icon component
 }>;
+
