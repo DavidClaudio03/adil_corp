@@ -1,11 +1,27 @@
-import Header from "@/components/header"
-import Hero from "@/components/hero"
+import Header from "@/components/layout/Header";
+import Hero from "@/components/sections/Hero";
+import Automotriz from "@/components/sections/automotriz/Automotriz";
+import Marketing from "@/components/sections/marketing/Marketing";
+import MiniPorfolio from "@/components/sections/portafolio/MiniPortafolio";
+import Benefits from "@/components/sections/benefits/Benefits";
+import Testimonials from "@/components/sections/testimonials/Testimonials";
+import Footer from "@/components/layout/Footer";
+import WhatsAppButton from "@/components/whatsapp";
 
-export default function HomePage() {
+export default function Page() {
   return (
-    <main className="min-h-screen bg-background">
+    <>
       <Header />
-      <Hero />
-    </main>
-  )
+      <main>
+        <Hero />
+        <Automotriz />
+        <Marketing />
+        <MiniPorfolio />
+        <Benefits />
+        <Testimonials />
+        <WhatsAppButton />
+      </main>
+      <Footer />
+    </>
+  );
 }
