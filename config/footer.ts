@@ -4,7 +4,9 @@ import type { FooterContact, FooterLink } from "@/types/footer";
 export const FOOTER_COPY = {
   headline: "LEJOS SOMOS MÁS",
   rightsPrefix: "©",
-  rightsSuffix: "ADIL CORP. Todos los derechos reservados.",
+  rightsSuffix: "Diseñado y desarrollado por",
+  rightAutor: "Ing. David Claudio",
+  privateDecryption: "Todos los derechos reservados.",
 } as const;
 
 export const FOOTER_CONTACT: ReadonlyArray<FooterContact> = [
@@ -18,9 +20,9 @@ export const FOOTER_CONTACT: ReadonlyArray<FooterContact> = [
   {
     id: "email",
     label: "Email",
-    value: "info@adilcorp.com",
+    value: "info@adilservices.com",
     icon: Mail,
-    href: "mailto:info@adilcorp.com",
+    href: "mailto:info@adilservices.com",
   },
   {
     id: "location",
@@ -34,8 +36,9 @@ export const FOOTER_CONTACT: ReadonlyArray<FooterContact> = [
 // Enlaces opcionales a subpáginas (portafolio, blog, contacto, etc.)
 export const FOOTER_LINKS: ReadonlyArray<FooterLink> = [
   { id: "home",        label: "Inicio",       href: "#home" },
-  { id: "automotive",  label: "Automotriz",   href: "#automotive" },
+  { id: "automotive",  label: "Automotriz",   href: "#automotriz" },
   { id: "marketing",   label: "Marketing",    href: "#marketing" },
-  { id: "portafolio",  label: "Portafolio",   href: "/portafolio" }, // subpágina
-  { id: "contacto",    label: "Contacto",     href: "/contacto" },   // subpágina
+  { id: "portafolio",  label: "Portafolio",   href: "#mini-portafolio" }, // subpágina
+  { id: "blog",        label: "Blog",         href: "#blog" },          // subpágina
+  { id: "contacto",    label: "Contacto",     href: "#contacto" },   // subpágina
 ] as const;

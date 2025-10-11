@@ -17,7 +17,7 @@ export default memo(function BenefitTile({ benefit, index }: Props) {
         >
             <CardContent className="p-6 text-center">
                 <div className="flex justify-center mb-4">
-                    <div className="p-3 bg-gradient-to-r from-primary to-tertiary rounded-full group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
+                    <div className="p-3 bg-gradient-to-r from-primary to-secondary rounded-full group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
                         <benefit.icon className="h-6 w-6 text-white" />
                     </div>
                 </div>

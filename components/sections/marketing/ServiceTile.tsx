@@ -18,7 +18,7 @@ export default memo(function ServiceTile({ service, index }: Props) {
             <div className="gradient-border-content">
                 <CardContent className="p-6 text-center">
                     <div className="flex justify-center mb-4">
-                        <div className="w-12 h-12 bg-[#ED0086] from-primary to-tertiary rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
+                        <div className="w-12 h-12 gradient-adilcorp rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
                             <service.icon className="h-6 w-6 text-white" />
                         </div>
                     </div>

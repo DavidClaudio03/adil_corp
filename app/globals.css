@@ -22,9 +22,9 @@
   --secondary: #8acbef;                 /* Celeste */
   --secondary-foreground: #000000;      /* Texto negro sobre celeste */
 
-  --tertiary: #f5c1c0;
-  --tertiary-foreground: #b970dc;
-
+  --tertiary: #ED0086;
+  --tertiary-foreground: #f5c1c0;
+  
   --muted: rgba(0, 0, 0, 0.6);          /* Negro con opacidad */
   --muted-foreground: rgba(0, 0, 0, 0.7);
 
@@ -193,8 +193,8 @@
   .gradient-tertiary {
     background: linear-gradient(to right, #543fb2 0%, #543fb2 70%, #8acbef 100%);
   }
-  .gradient-2tertiary {
-    background: linear-gradient(to right, #543fb2 0%, #543fb2 70%, #a760dc 100%);
+  .gradient-adilcorp {
+    background: linear-gradient(to right, #ED0086 0%, #ED0086 70%, #f5c1c0 100%);
   }
 
 

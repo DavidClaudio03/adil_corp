@@ -29,6 +29,6 @@ export const BENEFITS: ReadonlyArray<BenefitItem> = [
 ] as const;
 
 export const BENEFITS_COPY = {
-  BadgeText: "Ventajas de trabajar con nosotros",
+  BadgeText: "Beneficios",
   heading: "¿Por qué elegir ADIL CORP?",
 } as const;

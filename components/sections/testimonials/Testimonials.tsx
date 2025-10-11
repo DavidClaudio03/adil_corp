@@ -18,7 +18,7 @@ export default function Testimonials() {
     return (
         <section ref={testimonialsRef} id="testimonios" className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-secondary/5 to-primary/5">
             <div className="text-center mb-6">
-                <Badge className="mb-6 bg-secondary text-secondary-foreground border-primary/30 animate-bounce">
+                <Badge className="mb-6 px-6 text-base sm:text-xl md:text-sm bg-secondary text-secondary-foreground border-primary/30 animate-bounce">
                     {badgeText}
                 </Badge>
             </div>

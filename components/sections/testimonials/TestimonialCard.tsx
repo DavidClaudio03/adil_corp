@@ -37,11 +37,23 @@ export default memo(function TestimonialCard({ item, index }: Props) {
                 </blockquote>
 
                 <div className="border-t border-border pt-4">
-                    <p className="font-semibold">{item.name}</p>
-                    <p className="text-sm text-muted-foreground">{item.role}</p>
-                    <p className="text-sm text-primary font-medium">
-                        <cite>{item.company}</cite>
-                    </p>
+                    <div className="flex items-center gap-3">
+                        {/* Imagen */}
+                        <img
+                            src={item.image}
+                            alt={item.name}
+                            className="w-12 h-12 rounded-full object-cover sm:w-12 sm:h-12"
+                        />
+
+                        {/* Nombre y datos */}
+                        <div>
+                            <p className="font-semibold">{item.name}</p>
+                            <p className="text-sm text-muted-foreground">{item.role}</p>
+                            <p className="text-sm text-primary font-medium">
+                                <cite>{item.company}</cite>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </CardContent>
         </Card>

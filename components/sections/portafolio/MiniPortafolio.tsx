@@ -18,9 +18,9 @@ export default function MiniPortfolio() {
     const badgeText = PORTFOLIO_COPY.badgeText || "Portafolio";
 
     return (
-        <section ref={sectionRef} id="casos-exito" className="py-16 px-4 sm:px-6 lg:px-8">
+        <section ref={sectionRef} id="mini-portafolio" className="py-16 px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-6">
-                <Badge className="mb-6 bg-primary text-primary-foreground border-primary/30 animate-bounce">
+                <Badge className="mb-6 px-6 text-base sm:text-xl md:text-sm bg-primary text-primary-foreground border-primary/30 animate-bounce">
                     {badgeText}
                 </Badge>
             </div>
@@ -44,7 +44,7 @@ export default function MiniPortfolio() {
                     <Button
                         asChild
                         size="lg"
-                        className="bg-gradient-to-r from-primary/90 to-secondary/50 hover:opacity-90 transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:shadow-secondary/30 group"
+                        className="bg-gradient-to-r from-primary to-secondary/40 hover:opacity-90 transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:shadow-secondary/30 group"
                     >
                         <Link href="/contacto">
                             {PORTFOLIO_COPY.ctaLabel}

@@ -7,6 +7,8 @@ import Benefits from "@/components/sections/benefits/Benefits";
 import Testimonials from "@/components/sections/testimonials/Testimonials";
 import Footer from "@/components/layout/Footer";
 import WhatsAppButton from "@/components/whatsapp";
+import Contact from "./contact/page";
+import BlogPage from "./blog/page";
 
 export default function Page() {
   return (
@@ -19,6 +21,8 @@ export default function Page() {
         <MiniPorfolio />
         <Benefits />
         <Testimonials />
+        <BlogPage />
+        <Contact />
         <WhatsAppButton />
       </main>
       <Footer />

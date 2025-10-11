@@ -2,7 +2,7 @@
 
 import { motion, easeOut } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Calendar, TrendingUp, Clock, Car, BarChart3 } from "lucide-react";
+import { ArrowRight, Calendar, TrendingUp, Clock, Car, ChartNoAxesCombined } from "lucide-react";
 import type { HeroProps } from "@/types/hero";
 
 export default function Hero({
@@ -36,7 +36,7 @@ export default function Hero({
     };
 
     return (
-        <header className="relative min-h-screen flex flex-col justify-center overflow-hidden pt-20" aria-labelledby="hero-title">
+        <header className="relative min-h-screen flex flex-col justify-center overflow-hidden pt-20" aria-labelledby="hero-title" id="home">
             {/* Background Image */}
             <div className="absolute inset-0">
                 <div
@@ -108,7 +108,7 @@ export default function Hero({
                             <Button
                                 variant="outline"
                                 size="default"
-                                className="bg-white/90 backdrop-blur-sm border-2 border-white text-black px-2 py-2 text-[10px] sm:text-xs font-semibold rounded-lg hover:bg-white hover:text-[#543fb2] transition-all duration-300 group w-full sm:w-auto flex items-center justify-center gap-1"
+                                className="bg-white/90 backdrop-blur-sm border-2 border-white text-black px-2 py-2 text-[10px] sm:text-xs font-semibold rounded-lg hover:bg-white hover:text-tertiary transition-all duration-300 group w-full sm:w-auto flex items-center justify-center gap-1"
                                 aria-label="Impulsar negocio con marketing digital"
                             >
                                 <TrendingUp className="h-3 w-3 flex-shrink-0" aria-hidden="true" />
@@ -121,32 +121,59 @@ export default function Hero({
             </motion.div>
 
             {/* Bottom Section with White Background */}
-            <motion.div className="relative z-10 bg-white py-1 sm:py-2" variants={containerVariants} initial="hidden" animate="visible">
+            <motion.div
+                className="relative z-10 bg-white py-1 sm:py-2"
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+            >
                 <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-2 sm:mb-4">
-                        <motion.div className="text-center" variants={itemVariants}>
+                        {/* Item 1 */}
+                        <motion.div
+                            className="text-center group cursor-pointer"
+                            variants={itemVariants}
+                        >
                             <div className="flex justify-center mb-1 sm:mb-2">
-                                <Clock className="h-8 w-8 sm:h-10 sm:w-10 text-black" />
+                                <Clock className="h-8 w-8 sm:h-10 sm:w-10 text-black transition-transform duration-300 group-hover:scale-110" />
                             </div>
-                            <h3 className="text-sm sm:text-base font-bold text-black mb-1">Ahorra tiempo</h3>
+                            <h3 className="text-sm sm:text-base font-bold text-black mb-1 transition-transform duration-300 group-hover:scale-110">
+                                Ahorra tiempo
+                            </h3>
                         </motion.div>
 
-                        <motion.div className="text-center" variants={itemVariants}>
+                        {/* Item 2 */}
+                        <motion.div
+                            className="text-center group cursor-pointer"
+                            variants={itemVariants}
+                        >
                             <div className="flex justify-center mb-1 sm:mb-2">
-                                <Car className="h-8 w-8 sm:h-10 sm:w-10 text-black" />
+                                <Car className="h-8 w-8 sm:h-10 sm:w-10 text-black transition-transform duration-300 group-hover:scale-110" />
                             </div>
-                            <h3 className="text-sm sm:text-base font-bold text-black mb-1">Confianza en lo automotriz</h3>
+                            <h3 className="text-sm sm:text-base font-bold text-black mb-1 transition-transform duration-300 group-hover:scale-110">
+                                Confianza en lo automotriz
+                            </h3>
                         </motion.div>
 
-                        <motion.div className="text-center" variants={itemVariants}>
+                        {/* Item 3 */}
+                        <motion.div
+                            className="text-center group cursor-pointer"
+                            variants={itemVariants}
+                        >
                             <div className="flex justify-center mb-1 sm:mb-2">
-                                <BarChart3 className="h-8 w-8 sm:h-10 sm:w-10 text-black" />
+                                <ChartNoAxesCombined className="h-8 w-8 sm:h-10 sm:w-10 text-black transition-transform duration-300 group-hover:scale-110" />
                             </div>
-                            <h3 className="text-sm sm:text-base font-bold text-black mb-1">Estrategias digitales efectivas</h3>
+                            <h3 className="text-sm sm:text-base font-bold text-black mb-1 transition-transform duration-300 group-hover:scale-110">
+                                Estrategias digitales efectivas
+                            </h3>
                         </motion.div>
                     </div>
 
-                    <motion.p className="text-xs sm:text-sm text-black text-center max-w-3xl mx-auto leading-relaxed" variants={itemVariants}>
+                    {/* Description con tamaño mayor */}
+                    <motion.p
+                        className="text-sm sm:text-lg text-black text-center max-w-3xl mx-auto leading-relaxed"
+                        variants={itemVariants}
+                    >
                         {description}
                     </motion.p>
                 </div>

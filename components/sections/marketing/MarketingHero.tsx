@@ -25,7 +25,7 @@ export default function MarketingHero({
     return (
         <>
             <div className="text-center mb-12">
-                <Badge className="mb-6 bg-secondary/20 text-secondary-foreground border-secondary/30 animate-bounce">
+                <Badge className="mb-6 px-6 text-base sm:text-xl md:text-sm bg-tertiary/90 text-primary-foreground border-secondary/30 animate-bounce">
                     {badgeText}
                 </Badge>
                 <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gradient animate-gradient-x">
@@ -51,7 +51,7 @@ export default function MarketingHero({
             <div className="text-center">
                 <Button
                     size="lg"
-                    className="bg-gradient-to-r from-secondary to-primary hover:opacity-90 transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:shadow-secondary/30 group"
+                    className="gradient-adilcorp hover:opacity-90 transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:shadow-tertiary/30 group"
                 >
                     {ctaLabel}
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />

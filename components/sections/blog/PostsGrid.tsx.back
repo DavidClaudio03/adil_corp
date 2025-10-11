@@ -1,0 +1,22 @@
+// "use client";
+
+// import type { BlogPost } from "@/types/blog";
+// import PostCard from "./PostCard";
+
+// export default function PostsGrid({ posts }: { posts: ReadonlyArray<BlogPost> }) {
+//     return (
+//         <section className="py-16 px-4 sm:px-6 lg:px-8">
+//             <div className="max-w-7xl mx-auto">
+//                 <div className="text-center mb-12">
+//                     <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gradient">Todos los Artículos</h2>
+//                     <p className="text-lg text-muted-foreground">
+//                         {posts.length} artículo{posts.length !== 1 ? "s" : ""} encontrado{posts.length !== 1 ? "s" : ""}
+//                     </p>
+//                 </div>
+//                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+//                     {posts.map(p => <PostCard key={p.id} post={p} />)}
+//                 </div>
+//             </div>
+//         </section>
+//     );
+// }

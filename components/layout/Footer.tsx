@@ -31,9 +31,15 @@ export default function Footer() {
 
                 {/* Derechos reservados */}
                 <div className="mt-12 text-center text-sm text-primary-foreground">
-                    {FOOTER_COPY.rightsPrefix} {year} {FOOTER_COPY.rightsSuffix}
+                    {FOOTER_COPY.rightsPrefix} {year} {FOOTER_COPY.rightsSuffix}{' '}
+                    <a href="https://davidclaudio.vercel.app" target="_blank">
+                        <span className="text-secondary">{FOOTER_COPY.rightAutor}</span>.{' '}
+                    </a>
+                    {FOOTER_COPY.privateDecryption}
                 </div>
+
+
             </div>
-        </footer>
+        </footer >
     );
 }

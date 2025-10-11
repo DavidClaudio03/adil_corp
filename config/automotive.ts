@@ -26,3 +26,7 @@ export const AUTO_SERVICES: ReadonlyArray<AutoService> = [
     imageAlt: "Cliente empresarial con asesor revisando auto premium"
   }
 ] as const;
+
+export const AUTO_COPY = {
+  BadgeText: "Automotriz",
+} as const;

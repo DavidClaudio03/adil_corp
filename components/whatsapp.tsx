@@ -10,10 +10,10 @@ export default function WhatsAppButton() {
             >
                 <Button
                     size="lg"
-                    className="bg-green-500 hover:bg-green-600 animate-bounce hover:animate-pulse hover:scale-110 transition-all duration-300 shadow-2xl hover:shadow-green-500/40 group rounded-full w-16 h-16 p-0"
+                    className="bg-green-500 hover:bg-green-600 animate-bounce hover:animate-pulse hover:scale-110 transition-all duration-300 shadow-2xl hover:shadow-green-500/40 group rounded-full w-14 h-14 p-0"
                 >
                     <svg
-                        className="w-8 h-8 text-white group-hover:scale-110 transition-transform duration-300"
+                        className="w-[72px] h-[72px] text-white group-hover:scale-110 transition-transform duration-300"
                         fill="currentColor"
                         viewBox="0 0 24 24"
                     >

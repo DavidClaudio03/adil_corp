@@ -25,8 +25,8 @@ const itemVariants = {
 export default function MechanicsHero({
     imageSrc = "/professional-uniformed-mechanic-servicing-executiv.png",
     imageAlt = "Mecánico profesional uniformado",
-    title = "MANTENIMIENTO A TU PUERTA",
-    description = "Servicios técnicos esenciales como frenos o cambio de aceite, realizados en tu domicilio con control de calidad profesional.",
+    title = "MANTENIMIENTO PUERTA A PUERTA",
+    description = "Servicios Técnicos Profesionales como frenos o cambio de aceite, realizados puerta a puerta, liberamos tu tiempo para realices las cosas que tienen más relevancia.",
     ctaLabel = "Reserva tu Servicio",
 }: Props) {
     return (

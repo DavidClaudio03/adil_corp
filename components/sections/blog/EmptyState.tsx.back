@@ -1,0 +1,14 @@
+// "use client";
+
+// import { Button } from "@/components/ui/button";
+
+// export default function EmptyState({ onReset }: { onReset: () => void }) {
+//     return (
+//         <div className="text-center py-12">
+//             <p className="text-muted-foreground text-lg">No se encontraron artículos que coincidan con tu búsqueda.</p>
+//             <Button onClick={onReset} className="mt-4 bg-gradient-to-r from-primary to-secondary hover:opacity-90">
+//                 Ver Todos los Artículos
+//             </Button>
+//         </div>
+//     );
+// }

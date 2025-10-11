@@ -1,6 +1,7 @@
 export type Testimonial = Readonly<{
   id: string;
   name: string;
+  image: string; 
   role: string;
   company: string;
   quote: string;
