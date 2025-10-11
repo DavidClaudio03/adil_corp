@@ -17,13 +17,16 @@ export async function POST(req: Request) {
     // Configurar transporte SMTP
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
-      port: Number(process.env.EMAIL_PORT),
-      secure: true, // SSL
+      port: Number(process.env.EMAIL_PORT), // 587
+      secure: false, // ❌ no SSL
+      requireTLS: true, // ✅ forzar STARTTLS (TLS)
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
+      connectionTimeout: 10000, // 10 segundos
     });
+
 
     // Cuerpo del correo
     const mailOptions = {
