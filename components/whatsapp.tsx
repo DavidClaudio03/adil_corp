@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 export default function WhatsAppButton() {
     return (
-        <div className="fixed bottom-6 right-6 z-50">
+        <div className="fixed bottom-18 right-4 z-50">
             <a
                 href="https://wa.me/593996834173?text=Hola%20ADIL%20CORP,%20me%20interesa%20conocer%20más%20sobre%20sus%20servicios"
                 target="_blank"

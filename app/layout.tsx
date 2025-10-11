@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import './globals.css'
+import ChatbaseWidget from "@/components/ChatbaseWidget";
 
 export const metadata: Metadata = {
   title: 'Adil Corp',
@@ -20,6 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
         {children}
+        <ChatbaseWidget />
       </body>
     </html>
   )
