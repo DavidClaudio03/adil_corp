@@ -46,7 +46,7 @@ export default function MiniPortfolio() {
                         size="lg"
                         className="bg-gradient-to-r from-primary to-secondary/40 hover:opacity-90 transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:shadow-secondary/30 group"
                     >
-                        <Link href="/contacto">
+                        <Link href="">
                             {PORTFOLIO_COPY.ctaLabel}
                             {/* Icono conservado dentro del propio botón por tu diseño original */}
                             <svg
