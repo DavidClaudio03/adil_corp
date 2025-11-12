@@ -2,6 +2,7 @@
 
 import { memo } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle, Shield, ArrowRight } from "lucide-react";
@@ -18,7 +19,13 @@ export default memo(function ServiceCard({ service }: Props) {
     const isPrimary = service.accent === "primary";
     const accentBg = isPrimary ? "bg-primary/10 group-hover:bg-primary/20" : "bg-secondary/10 group-hover:bg-secondary/20";
     const gradientShadow = isPrimary ? "hover:shadow-primary/60" : "hover:shadow-secondary/60";
-    const gradientBorder = "gradient-border"; // clase existente en tu CSS
+    const gradientBorder = "gradient-border";
+    const BtnInner = (
+        <>
+            {service.ctaLabel}
+            <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
+        </>
+    );
 
     return (
         <div className={`${gradientBorder} group rounded-2xl hover:scale-105 transition-all duration-500 hover:shadow-2xl ${gradientShadow}`}>
@@ -55,15 +62,26 @@ export default memo(function ServiceCard({ service }: Props) {
                         {service.description}
                     </p>
 
-                    <Button
-                        className={`w-full group ${service.ctaVariant === "outline"
-                            ? "border-secondary text-secondary hover:bg-secondary/10 bg-transparent"
-                            : "gradient-tertiary text-white hover:opacity-90"} transition-all duration-300 hover:scale-105`}
-                        variant={service.ctaVariant ?? "default"}
-                    >
-                        {service.ctaLabel}
-                        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
-                    </Button>
+                    {service.href ? (
+                        <Button
+                            asChild // <— hace al Button actuar como <a>, mantiene estilos
+                            className={`w-full group ${service.ctaVariant === "outline"
+                                ? "border-secondary text-secondary hover:bg-secondary/10 bg-transparent"
+                                : "gradient-tertiary text-white hover:opacity-90"} transition-all duration-300 hover:scale-105`}
+                            variant={service.ctaVariant ?? "default"}
+                        >
+                            <Link href={service.href}>{BtnInner}</Link>
+                        </Button>
+                    ) : (
+                        <Button
+                            className={`w-full group ${service.ctaVariant === "outline"
+                                ? "border-secondary text-secondary hover:bg-secondary/10 bg-transparent"
+                                : "gradient-tertiary text-white hover:opacity-90"} transition-all duration-300 hover:scale-105`}
+                            variant={service.ctaVariant ?? "default"}
+                        >
+                            {BtnInner}
+                        </Button>
+                    )}
                 </CardContent>
             </Card>
         </div>
