@@ -8,4 +8,5 @@ export type AutoService = Readonly<{
   ctaVariant?: "default" | "outline";
   imageSrc: string;
   imageAlt: string;
+  href: string;
 }>;

@@ -11,7 +11,8 @@ export const AUTO_SERVICES: ReadonlyArray<AutoService> = [
     ctaLabel: "Agenda tu Revisión",
     ctaVariant: "default",
     imageSrc: "/executive-client-in-modern-office-with-professiona.png",
-    imageAlt: "Inspección técnica ejecutiva"
+    imageAlt: "Inspección técnica ejecutiva",
+    href: "/automotriz/revision-tecnica",
   },
   {
     id: "compra-segura",
@@ -23,7 +24,8 @@ export const AUTO_SERVICES: ReadonlyArray<AutoService> = [
     ctaLabel: "Cotiza tu Asesoría",
     ctaVariant: "outline",
     imageSrc: "/business-client-with-professional-automotive-advis.png",
-    imageAlt: "Cliente empresarial con asesor revisando auto premium"
+    imageAlt: "Cliente empresarial con asesor revisando auto premium",
+    href: "/servicios/compra-segura"
   }
 ] as const;
 

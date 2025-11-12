@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Link from "next/link";
 import { useRevealOnScroll } from "@/hooks/useRevealOnScroll";
 import { AUTO_SERVICES, AUTO_COPY } from "@/config/automotive";
 import ServiceCard from "./ServiceCard";
