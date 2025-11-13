@@ -1,8 +1,13 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { AUTO_SERVICES } from "@/config/automotive";
-import { SubHeroAuto } from "@/components/sections/automotriz/subpage/hero";
+import { SubHeroAuto } from "@/components/sections/automotriz/subpage/Hero";
 import { SubBenefits } from "@/components/sections/automotriz/subpage/Benefits";
+import { SubEligibility } from "@/components/sections/automotriz/subpage/Eligibility";
+import { SubPricing } from "@/components/sections/automotriz/subpage/Pricing";
+import { SubProcess } from "@/components/sections/automotriz/subpage/Process";
+import { SubCalendar } from "@/components/sections/automotriz/subpage/Calendar";
+import StickyMobile from "@/components/sections/automotriz/subpage/sticky_mobile";
 
 type Props = { params: { serviceId: string } };
 
@@ -27,6 +32,11 @@ export default function ServicioPage({ params }: Props) {
         <div >
             <SubHeroAuto />
             <SubBenefits />
+            <SubEligibility />
+            <SubPricing />
+            <SubProcess />
+            <SubCalendar />
+            <StickyMobile />
         </div>
     );
 }

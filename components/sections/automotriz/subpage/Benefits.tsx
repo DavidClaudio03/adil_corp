@@ -1,4 +1,7 @@
 import { Clock, Shield, Zap, Users, Award } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+
+const badgeText = "Beneficios"
 
 const benefits = [
     {
@@ -31,6 +34,11 @@ const benefits = [
 export function SubBenefits() {
     return (
         <section className="py-16 sm:py-20 lg:py-24 bg-white" aria-labelledby="benefits-heading">
+            <div className="text-center mb-4">
+                <Badge className="mb-6 px-6 text-base sm:text-xl md:text-sm bg-primary/90 text-primary-foreground border-secondary/30 animate-bounce">
+                    {badgeText}
+                </Badge>
+            </div>
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-12">
                     <h2 id="benefits-heading" className="text-3xl font-bold tracking-tight sm:text-4xl text-balance">

@@ -9,6 +9,8 @@
   --background: #ffffff;                /* Blanco puro */
   --foreground: #000000;                /* Negro puro */
 
+  --pruebas: #6a54d8;
+
   --card: rgba(255, 255, 255, 0.9);
   --card-foreground: #000000;
 
@@ -123,6 +125,7 @@
 
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: #6a54d8;
 
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
