@@ -6,7 +6,15 @@ import { CalendarIcon, Clock, AlertCircle, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge"
+import {
+    BANK_ACCOUNT,
+    DEPOSIT_AMOUNT,
+    ACCEPTED_FILE_TYPES,
+    MAX_FILE_SIZE_BYTES
+} from "@/config/payment"
+import { BankTransferSection } from "./calendar/BankTransferSection"
+import { BookingSummary } from "./calendar/BookingSummary"
 
 type FormState = "idle" | "loading" | "success" | "error"
 const badgeText = "Agenda tu cita"
@@ -26,12 +34,15 @@ export function SubCalendar() {
     const [selectedTime, setSelectedTime] = useState("")
     const [formState, setFormState] = useState<FormState>("idle")
     const [isLoadingSlots, setIsLoadingSlots] = useState(false)
+
     const [formData, setFormData] = useState({
         name: "",
         phone: "",
         plate: "",
         email: ""
     })
+
+    const [paymentProofFile, setPaymentProofFile] = useState<File | null>(null)
     const [errors, setErrors] = useState<Record<string, string>>({})
 
     const formattedDate = useMemo(() => {
@@ -51,9 +62,45 @@ export function SubCalendar() {
         setSelectedDate(date)
         setSelectedTime("")
         setErrors((prev) => ({ ...prev, date: "" }))
-        // CONNECT: Fetch available time slots from backend/Calendly API
+
+        // CONNECT: aquí iría la consulta a Supabase / backend para timeSlots reales
         setIsLoadingSlots(true)
         setTimeout(() => setIsLoadingSlots(false), 800)
+    }
+
+    const handlePaymentProofChange = (file: File | null) => {
+        if (!file) {
+            setPaymentProofFile(null)
+            setErrors((prev) => ({
+                ...prev,
+                paymentProof: "Debes subir la captura del comprobante para confirmar tu reserva."
+            }))
+            return
+        }
+
+        if (!ACCEPTED_FILE_TYPES.includes(file.type as (typeof ACCEPTED_FILE_TYPES)[number])) {
+            setPaymentProofFile(null)
+            setErrors((prev) => ({
+                ...prev,
+                paymentProof: "Formato no permitido. Usa imagen o PDF."
+            }))
+            return
+        }
+
+        if (file.size > MAX_FILE_SIZE_BYTES) {
+            setPaymentProofFile(null)
+            setErrors((prev) => ({
+                ...prev,
+                paymentProof: "El archivo supera el tamaño máximo permitido."
+            }))
+            return
+        }
+
+        setPaymentProofFile(file)
+        setErrors((prev) => {
+            const { paymentProof, ...rest } = prev
+            return rest
+        })
     }
 
     const validateForm = () => {
@@ -83,6 +130,10 @@ export function SubCalendar() {
         if (!selectedDate) newErrors.date = "Selecciona una fecha"
         if (!selectedTime) newErrors.time = "Selecciona una hora"
 
+        if (!paymentProofFile) {
+            newErrors.paymentProof = "Debes subir la captura del comprobante para confirmar tu reserva."
+        }
+
         setErrors(newErrors)
         return Object.keys(newErrors).length === 0
     }
@@ -94,23 +145,52 @@ export function SubCalendar() {
 
         setFormState("loading")
 
-        // CONNECT: Submit to backend API or Calendly
         try {
-            await new Promise((resolve) => setTimeout(resolve, 1500))
+            // CONNECT (seguro y rápido):
+            // Aquí debes llamar a tu endpoint de Next (/api/automotriz/reservas)
+            // que haga:
+            // 1. Subir el archivo a Supabase Storage.
+            // 2. Guardar en BD (Supabase).
+            // 3. Enviar email + WhatsApp.
+            const payload = new FormData()
+            payload.append("name", formData.name.trim())
+            payload.append("phone", normalizePhone(formData.phone))
+            payload.append("plate", normalizePlate(formData.plate))
+            payload.append("email", formData.email.trim())
+            payload.append("date", selectedDate)
+            payload.append("time", selectedTime)
+            payload.append("depositAmount", String(DEPOSIT_AMOUNT))
+
+            if (paymentProofFile) {
+                payload.append("paymentProof", paymentProofFile)
+            }
+
+            const response = await fetch("/api/automotriz/reservas", {
+                method: "POST",
+                body: payload
+            })
+
+            if (!response.ok) {
+                throw new Error("Error al procesar la reserva")
+            }
+
             setFormState("success")
 
-            // Reset form after success
             setTimeout(() => {
                 setFormState("idle")
                 setFormData({ name: "", phone: "", plate: "", email: "" })
                 setSelectedDate("")
                 setSelectedTime("")
+                setPaymentProofFile(null)
                 setErrors({})
             }, 5000)
-        } catch {
+        } catch (error) {
+            console.error(error)
             setFormState("error")
         }
     }
+
+    const isSubmitDisabled = formState === "loading" || !paymentProofFile
 
     return (
         <section
@@ -140,8 +220,8 @@ export function SubCalendar() {
                         Agenda con nosotros
                     </h2>
                     <p className="text-lg text-[var(--color-text-muted)] text-pretty max-w-[50ch] mx-auto">
-                        Elige día y hora, ingresa tus datos y confirma. Te contactaremos por WhatsApp en
-                        minutos.
+                        Elige día y hora, ingresa tus datos, realiza la transferencia y sube el comprobante.
+                        Te confirmamos por WhatsApp.
                     </p>
                 </div>
 
@@ -156,16 +236,15 @@ export function SubCalendar() {
                                 aria-hidden="true"
                             />
                             <h3 className="text-2xl font-bold mb-2">
-                                ¡Listo! Tu solicitud de reserva fue enviada.
+                                ¡Listo! Tu reserva fue enviada.
                             </h3>
                             <p className="text-sm sm:text-base text-[var(--color-text-muted)] max-w-[40ch] mx-auto">
-                                Te contactaremos por WhatsApp para confirmar la hora exacta y enviarte los
-                                detalles de pago del depósito.
+                                Revisaremos el comprobante y te confirmaremos por WhatsApp y correo el estado de tu cita.
                             </p>
                         </div>
                     ) : (
                         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1.1fr)] items-start">
-                            {/* Columna izquierda: info y resumen */}
+                            {/* Columna izquierda: info + resumen */}
                             <div className="space-y-5">
                                 {/* Stepper simple */}
                                 <div className="rounded-[var(--radius)] bg-white/90 border border-[var(--color-border)]/70 p-4 shadow-sm">
@@ -189,9 +268,9 @@ export function SubCalendar() {
                                                 2
                                             </span>
                                             <div>
-                                                <p className="font-medium text-gray-900">Ingresa tus datos</p>
+                                                <p className="font-medium text-gray-900">Realiza la transferencia</p>
                                                 <p className="text-xs text-[var(--color-text-muted)]">
-                                                    Usamos tu WhatsApp y email solo para coordinar tu cita.
+                                                    Usa los datos de la cuenta bancaria y guarda la captura del comprobante.
                                                 </p>
                                             </div>
                                         </li>
@@ -200,53 +279,29 @@ export function SubCalendar() {
                                                 3
                                             </span>
                                             <div>
-                                                <p className="font-medium text-gray-900">Confirmación y depósito</p>
+                                                <p className="font-medium text-gray-900">Sube el comprobante y confirma</p>
                                                 <p className="text-xs text-[var(--color-text-muted)]">
-                                                    Te confirmamos por WhatsApp y te indicamos cómo pagar el depósito de{" "}
-                                                    <span className="font-semibold">$20</span>.
+                                                    Validamos el pago y te confirmamos por WhatsApp y correo.
                                                 </p>
                                             </div>
                                         </li>
                                     </ol>
                                 </div>
 
-                                {/* Resumen de reserva */}
-                                <div className="rounded-[var(--radius)] bg-white/90 border border-[var(--color-primary)]/25 p-4 shadow-sm">
-                                    <p className="text-xs font-semibold text-[var(--color-primary)] tracking-wide uppercase mb-2">
-                                        Tu reserva
-                                    </p>
-                                    <div className="space-y-1 text-sm">
-                                        <p className="flex justify-between gap-3">
-                                            <span className="text-[var(--color-text-muted)]">Fecha:</span>
-                                            <span className="font-medium text-gray-900">
-                                                {formattedDate || "Por seleccionar"}
-                                            </span>
-                                        </p>
-                                        <p className="flex justify-between gap-3">
-                                            <span className="text-[var(--color-text-muted)]">Hora:</span>
-                                            <span className="font-medium text-gray-900">
-                                                {selectedTime || "Por seleccionar"}
-                                            </span>
-                                        </p>
-                                        <p className="flex justify-between gap-3">
-                                            <span className="text-[var(--color-text-muted)]">Depósito:</span>
-                                            <span className="font-medium text-gray-900">$20</span>
-                                        </p>
-                                    </div>
-                                    <p className="mt-3 text-[11px] text-[var(--color-text-muted)]">
-                                        El depósito se descuenta del valor total de tu servicio el día de la cita.
-                                    </p>
-                                </div>
+                                <BookingSummary
+                                    formattedDate={formattedDate}
+                                    selectedTime={selectedTime}
+                                    depositAmount={DEPOSIT_AMOUNT}
+                                />
 
-                                {/* Aviso privacidad */}
                                 <div className="flex items-start gap-2 text-[11px] text-[var(--color-text-muted)]">
                                     <AlertCircle
                                         className="h-4 w-4 flex-shrink-0 mt-0.5"
                                         aria-hidden="true"
                                     />
                                     <p>
-                                        Protegemos tus datos. No los compartimos con terceros y solo los usamos para
-                                        coordinar tu servicio de Revisión Técnica Vehicular.
+                                        Nunca te pediremos claves, tokens ni códigos de tu banco. Solo verificamos el comprobante
+                                        que tú adjuntas.
                                     </p>
                                 </div>
                             </div>
@@ -339,15 +394,13 @@ export function SubCalendar() {
                                     </div>
                                 </div>
 
-                                {/* Info depósito */}
-                                <div className="p-3 rounded-[var(--radius)] bg-[var(--color-accent)]/10 border border-[var(--color-accent)]/60 text-xs sm:text-sm">
-                                    <p className="font-medium text-gray-900">
-                                        Reserva tu cita con <span className="text-[var(--color-primary)]">$20</span>.
-                                    </p>
-                                    <p className="text-[var(--color-text-muted)]">
-                                        Monto reembolsable o descontable del total el día de tu revisión.
-                                    </p>
-                                </div>
+                                {/* Datos de pago (transferencia + comprobante) */}
+                                <BankTransferSection
+                                    account={BANK_ACCOUNT}
+                                    paymentProofFile={paymentProofFile}
+                                    paymentProofError={errors.paymentProof}
+                                    onPaymentProofChange={handlePaymentProofChange}
+                                />
 
                                 {/* Datos de contacto */}
                                 <div className="grid gap-4 sm:grid-cols-2">
@@ -386,7 +439,10 @@ export function SubCalendar() {
                                             autoComplete="tel"
                                             value={formData.phone}
                                             onChange={(e) =>
-                                                setFormData((prev) => ({ ...prev, phone: normalizePhone(e.target.value) }))
+                                                setFormData((prev) => ({
+                                                    ...prev,
+                                                    phone: normalizePhone(e.target.value)
+                                                }))
                                             }
                                             placeholder="0999999999"
                                             className="h-11 mt-1 text-sm"
@@ -463,38 +519,45 @@ export function SubCalendar() {
                                     </div>
                                 </div>
 
-                                {/* Aviso de seguridad / privacidad ya reforzado arriba, aquí solo recordatorio */}
+                                {/* Aviso de seguridad */}
                                 <div className="flex items-start gap-2 text-[11px] text-[var(--color-text-muted)]">
                                     <CheckCircle2
                                         className="h-4 w-4 flex-shrink-0 mt-0.5 text-emerald-500"
                                         aria-hidden="true"
                                     />
                                     <p>
-                                        Tus datos viajan cifrados (HTTPS) y se usan únicamente para coordinar y
-                                        confirmar tu cita.
+                                        Tus datos y comprobantes se procesan en servidores seguros. No almacenamos claves ni
+                                        tokens bancarios, solo el comprobante que tú adjuntas.
                                     </p>
                                 </div>
 
                                 {/* Botón enviar */}
-                                <Button
-                                    type="submit"
-                                    size="lg"
-                                    disabled={formState === "loading"}
-                                    className="w-full h-12 bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-[0_18px_40px_rgba(15,23,42,0.4)] hover:-translate-y-0.5"
-                                    data-analytics="cta_calendar_confirmar"
-                                >
-                                    {formState === "loading" ? (
-                                        <>
-                                            <span
-                                                className="inline-block h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"
-                                                aria-hidden="true"
-                                            />
-                                            Procesando...
-                                        </>
-                                    ) : (
-                                        "Confirmar reserva"
+                                <div className="space-y-1">
+                                    <Button
+                                        type="submit"
+                                        size="lg"
+                                        disabled={isSubmitDisabled}
+                                        className="w-full h-12 bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-[0_18px_40px_rgba(15,23,42,0.4)] hover:-translate-y-0.5"
+                                        data-analytics="cta_calendar_confirmar"
+                                    >
+                                        {formState === "loading" ? (
+                                            <>
+                                                <span
+                                                    className="inline-block h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"
+                                                    aria-hidden="true"
+                                                />
+                                                Procesando...
+                                            </>
+                                        ) : (
+                                            "Confirmar reserva"
+                                        )}
+                                    </Button>
+                                    {!paymentProofFile && (
+                                        <p className="text-[11px] text-center text-[var(--color-text-muted)]">
+                                            Sube la captura del comprobante para habilitar la confirmación.
+                                        </p>
                                     )}
-                                </Button>
+                                </div>
 
                                 {formState === "error" && (
                                     <div
@@ -502,8 +565,8 @@ export function SubCalendar() {
                                         role="alert"
                                         aria-live="assertive"
                                     >
-                                        Hubo un error al procesar tu reserva. Por favor intenta nuevamente o
-                                        contáctanos por WhatsApp.
+                                        Hubo un error al procesar tu reserva. Por favor intenta nuevamente o contáctanos por
+                                        WhatsApp.
                                     </div>
                                 )}
                             </form>

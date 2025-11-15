@@ -225,5 +225,46 @@
     background-size: 300% 200%;
     animation: gradient-x-ltr 3s linear infinite;
   }
+
+  /* Borde degradado animado para botones tipo pill */
+  .border-animated {
+    position: relative;
+    z-index: 0;
+  }
+
+  .border-animated::before {
+    content: "";
+    position: absolute;
+    inset: -2px; /* borde un poquito afuera del botón */
+    border-radius: 9999px;
+    background: linear-gradient(90deg, #543fb2, #8acbef, #543fb2);
+    background-size: 300% 100%;
+    z-index: -1;
+    animation: borderMove 2.5s linear infinite;
+    opacity: 0.95;
+  }
+
+  /* Para que el fondo real del botón tape el centro y solo se vea el borde */
+  .border-animated::after {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    border-radius: 9999px;
+    background: inherit; /* respeta el bg del botón */
+    z-index: -1;
+  }
+
+  @keyframes borderMove {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
 }
 
