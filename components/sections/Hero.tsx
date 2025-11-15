@@ -3,6 +3,7 @@
 import { motion, easeOut } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Calendar, TrendingUp, Clock, Car, ChartNoAxesCombined } from "lucide-react";
+import { useRouter, usePathname } from "next/navigation";
 import type { HeroProps } from "@/types/hero";
 
 export default function Hero({
@@ -13,6 +14,22 @@ export default function Hero({
     description = "En Quito, hacemos que pasar la revisión técnica y hacer crecer tu negocio sea rápido, seguro y sin complicaciones.",
     backgroundImage = "/FondoHero.png",
 }: HeroProps) {
+    const router = useRouter();
+    const pathname = usePathname();
+
+    const handleReserveClick = () => {
+        if (pathname.includes("/automotriz/")) {
+            // Si ya estamos en una subpágina de automotriz, hacer scroll a la sección del calendario
+            const calendarSection = document.getElementById("booking-calendar");
+            if (calendarSection) {
+                calendarSection.scrollIntoView({ behavior: "smooth" });
+            }
+        } else {
+            // Si estamos en otra página, navegar a la primera subpágina de automotriz
+            router.push("/automotriz/revision-tecnica#booking-calendar");
+        }
+    };
+
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -90,6 +107,7 @@ export default function Hero({
                     >
                         <motion.div variants={buttonVariants} whileHover="hover" whileTap="tap" className="w-full sm:w-auto max-w-xs">
                             <Button
+                                onClick={handleReserveClick}
                                 size="default"
                                 className="bg-gradient-to-r from-[#543fb2] from-[60%] to-[#8acbef] to-[100%] text-white px-3 xs:px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-semibold rounded-lg border-0 shadow-lg hover:shadow-xl hover:from-[#543fb2] hover:to-[#543fb2] transition-all duration-300 group w-full sm:w-auto"
                                 aria-label="Reservar servicio automotriz"

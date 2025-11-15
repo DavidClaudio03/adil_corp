@@ -8,6 +8,7 @@ import { SubPricing } from "@/components/sections/automotriz/subpage/Pricing";
 import { SubProcess } from "@/components/sections/automotriz/subpage/Process";
 import { SubCalendar } from "@/components/sections/automotriz/subpage/Calendar";
 import StickyMobile from "@/components/sections/automotriz/subpage/sticky_mobile";
+import ScrollToElement from "@/components/ScrollToElement";
 
 type Props = { params: { serviceId: string } };
 
@@ -15,8 +16,9 @@ export function generateStaticParams() {
     return AUTO_SERVICES.map(s => ({ serviceId: s.id }));
 }
 
-export function generateMetadata({ params }: Props) {
-    const svc = AUTO_SERVICES.find(s => s.id === params.serviceId);
+export async function generateMetadata({ params }: Props) {
+    const resolvedParams = await params;
+    const svc = AUTO_SERVICES.find(s => s.id === resolvedParams.serviceId);
     if (!svc) return {};
     return {
         title: `${svc.title} | Servicios`,
@@ -24,12 +26,14 @@ export function generateMetadata({ params }: Props) {
     };
 }
 
-export default function ServicioPage({ params }: Props) {
-    const service = AUTO_SERVICES.find(s => s.id === params.serviceId);
+export default async function ServicioPage({ params }: Props) {
+    const resolvedParams = await params;
+    const service = AUTO_SERVICES.find(s => s.id === resolvedParams.serviceId);
     if (!service) notFound();
 
     return (
         <div >
+            <ScrollToElement />
             <SubHeroAuto />
             <SubBenefits />
             <SubEligibility />

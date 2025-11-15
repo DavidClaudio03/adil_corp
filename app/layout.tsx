@@ -3,6 +3,7 @@ import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import './globals.css'
 import ChatbaseWidget from "@/components/ChatbaseWidget";
+import WhatsAppButton from "@/components/whatsapp";
 
 export const metadata: Metadata = {
   title: 'Adil Corp',
@@ -21,6 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
         {children}
+        <WhatsAppButton />
         <ChatbaseWidget />
       </body>
     </html>

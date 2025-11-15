@@ -1,46 +1,60 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Calendar, MessageCircle } from "lucide-react"
+import { Calendar } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function StickyMobile() {
     const [isVisible, setIsVisible] = useState(false)
 
     useEffect(() => {
-        const handleScroll = () => {
-            // Mostrar sticky CTA después de hacer scroll 300px
-            setIsVisible(window.scrollY > 300)
+        const handleScrollOrResize = () => {
+            if (typeof window === "undefined") return
+
+            const isSmallScreen = window.innerWidth < 1024
+            const shouldShow = isSmallScreen && window.scrollY > 300
+
+            setIsVisible(shouldShow)
+
+            // Referencia al elemento de Chatbase (el botón flotante)
+            const chatbaseButton = document.getElementById("chatbase-bubble-button");
+
+            // En StickyMobile.tsx
+            if (shouldShow) {
+                document.body.classList.add("sticky-mobile-open")
+            } else {
+                // IMPORTANTE: Esto se ejecuta en desktop porque shouldShow es false
+                document.body.classList.remove("sticky-mobile-open")
+            }
         }
 
-        window.addEventListener("scroll", handleScroll)
-        return () => window.removeEventListener("scroll", handleScroll)
+        handleScrollOrResize()
+
+        window.addEventListener("scroll", handleScrollOrResize)
+        window.addEventListener("resize", handleScrollOrResize)
+
+        return () => {
+            window.removeEventListener("scroll", handleScrollOrResize)
+            window.removeEventListener("resize", handleScrollOrResize)
+            document.body.classList.remove("sticky-mobile-open")
+        }
     }, [])
-
-    const handleAgendarClick = () => {
-        document.getElementById("calendar")?.scrollIntoView({ behavior: "smooth" })
-    }
-
-    const handleWhatsAppClick = () => {
-        window.open(
-            "https://wa.me/593999999999?text=Hola,%20quiero%20agendar%20mi%20revisión%20técnica",
-            "_blank"
-        )
-    }
 
     if (!isVisible) return null
 
     return (
         <div
             className="
-        fixed bottom-0 left-0 right-0 z-50 lg:hidden
-        border-t border-[var(--color-border)]
-        bg-white/95 backdrop-blur
-        shadow-[0_-16px_40px_rgba(15,23,42,0.35)]
-        animate-in slide-in-from-bottom duration-300
-      "
+                fixed bottom-0 left-0 right-0 lg:hidden
+                border-t border-[var(--color-border)]
+                bg-white/95 backdrop-blur
+                shadow-[0_-16px_40px_rgba(15,23,42,0.35)]
+                animate-in slide-in-from-bottom duration-300
+            "
             style={{
-                paddingBottom: "env(safe-area-inset-bottom, 0px)"
+                paddingBottom: "env(safe-area-inset-bottom, 0px)",
+                // El valor máximo típico de z-index en navegadores (ganamos a casi todo)
+                zIndex: 2147483647
             }}
             aria-label="Accesos rápidos para agendar o chatear por WhatsApp"
         >
@@ -59,40 +73,25 @@ export function StickyMobile() {
 
                 <div className="flex gap-2">
                     <Button
-                        onClick={handleAgendarClick}
+                        onClick={() =>
+                            document
+                                .getElementById("booking-calendar")
+                                ?.scrollIntoView({ behavior: "smooth" })
+                        }
                         className="
-              flex-1 h-11
-              bg-[var(--color-primary)]
-              hover:bg-[var(--color-primary-hover)]
-              text-white
-              flex items-center justify-center
-              text-sm font-semibold
-              transition-all duration-200
-              hover:-translate-y-0.5 hover:shadow-[0_10px_24px_rgba(15,23,42,0.4)]
-            "
+                            flex-1 h-11
+                            bg-[var(--color-primary)]
+                            hover:bg-[var(--color-primary-hover)]
+                            text-white
+                            flex items-center justify-center
+                            text-sm font-semibold
+                            transition-all duration-200
+                            hover:-translate-y-0.5 hover:shadow-[0_10px_24px_rgba(15,23,42,0.4)]
+                        "
                         data-analytics="cta_sticky_agendar"
                     >
                         <Calendar className="h-5 w-5 mr-1.5" aria-hidden="true" />
                         <span>Agendar cita</span>
-                    </Button>
-
-                    <Button
-                        onClick={handleWhatsAppClick}
-                        variant="outline"
-                        className="
-              flex-1 h-11
-              border-2 border-[#25D366]/80
-              text-[#128C7E]
-              bg-white
-              hover:bg-[#25D366]/10
-              flex items-center justify-center
-              text-sm font-semibold
-              transition-all duration-200
-            "
-                        data-analytics="cta_sticky_whatsapp"
-                    >
-                        <MessageCircle className="h-5 w-5 mr-1.5" aria-hidden="true" />
-                        <span>WhatsApp</span>
                     </Button>
                 </div>
             </div>

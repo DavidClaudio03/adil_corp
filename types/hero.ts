@@ -5,4 +5,5 @@ export type HeroProps = Readonly<{
   secondaryButtonText?: string;
   description?: string;
   backgroundImage?: string;
+  href?: string;
 }>;

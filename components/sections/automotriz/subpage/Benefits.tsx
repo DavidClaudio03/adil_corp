@@ -8,39 +8,32 @@ const badgeText = "Beneficios"
 const benefits = [
     {
         icon: Clock,
-        title: "Ahorra 3+ horas",
-        description: "Sin filas ni esperas. Agenda tu cita y llega directo a tu turno confirmado.",
+        title: "Ahorra hasta 5+ horas",
+        description: "Servicio puerta a puerta y preparación técnica completa para tu vehículo.",
         category: "Tiempo",
         extra: "Ideal si tienes una agenda ajustada y no puedes perder medio día en filas."
     },
     {
         icon: Shield,
-        title: "Garantía de aprobación",
-        description: "Pre-inspección gratuita. Si tu vehículo no cumple, te avisamos antes y te asesoramos.",
-        category: "Seguridad",
-        extra: "Detectamos observaciones antes de la RTV para evitar rechazos y re-procesos."
+        title: "Mayor seguridad",
+        description: "Detectamos fallas básicas antes de tu turno oficial y las corregimos con tu autorización.",
+        category: "Confianza",
+        extra: "Revisamos frenos, luces, neumáticos y más para que tu vehículo esté en óptimas condiciones."
     },
     {
         icon: Zap,
-        title: "Proceso en 45 minutos",
-        description: "Desde tu llegada hasta el certificado en mano. Optimizamos cada paso del proceso.",
-        category: "Velocidad",
+        title: "Proceso claro",
+        description: "Recibes un informe técnico antes y después de las correcciones básicas.",
+        category: "Transparencia",
         extra: "Coordinamos horarios y trámites para reducir al máximo los tiempos muertos."
     },
     {
         icon: Users,
         title: "Soporte personalizado",
-        description: "Un asesor dedicado te acompaña en todo el proceso. Resolvemos tus dudas al instante.",
+        description: "Un asesor te guía por WhatsApp hasta el día de tu turno oficial.",
         category: "Acompañamiento",
-        extra: "Comunicación directa por WhatsApp y llamadas durante todo el servicio."
+        extra: "Resolvemos tus dudas y te mantenemos informado en cada etapa del proceso."
     },
-    {
-        icon: Award,
-        title: "Certificación inmediata",
-        description: "Certificado digital enviado a tu email. Válido para todos los trámites oficiales.",
-        category: "Tranquilidad",
-        extra: "Tu certificado queda respaldado digitalmente por si necesitas reimprimir o reenviar."
-    }
 ]
 
 export function SubBenefits() {
@@ -67,11 +60,10 @@ export function SubBenefits() {
                         id="benefits-heading"
                         className="text-3xl font-bold tracking-tight sm:text-4xl text-balance mb-3"
                     >
-                        Beneficios de nuestro servicio ejecutivo
+                        Beneficios de nuestro servicio técnico
                     </h2>
                     <p className="text-sm sm:text-base text-[var(--color-text-muted)] max-w-[60ch] mx-auto">
-                        Cada detalle está pensado para que apruebes tu Revisión Técnica Vehicular sin estrés,
-                        sin sorpresas y con acompañamiento en todo momento.
+                        Cada detalle está pensado para que llegues a la Revisión Técnica Vehicular sin sorpresas, con tu vehículo preparado correctamente.
                     </p>
                 </div>
 

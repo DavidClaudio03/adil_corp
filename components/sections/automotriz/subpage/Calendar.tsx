@@ -1,17 +1,28 @@
 "use client"
 
 import type React from "react"
-import { useMemo, useState } from "react"
+import { useMemo, useState, useEffect } from "react"
 import { CalendarIcon, Clock, AlertCircle, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge"
+import {
+    BANK_ACCOUNT,
+    DEPOSIT_AMOUNT,
+    ACCEPTED_FILE_TYPES,
+    MAX_FILE_SIZE_BYTES
+} from "@/config/payment"
+import { BankTransferSection } from "./calendar/BankTransferSection"
+import { BookingSummary } from "./calendar/BookingSummary"
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
+import { Calendar } from "@/components/ui/calendar"
 
 type FormState = "idle" | "loading" | "success" | "error"
 const badgeText = "Agenda tu cita"
 
-const timeSlots = ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"]
+// Horarios permitidos
+const timeSlots = ["07:00", "08:00", "09:00", "10:00", "11:00"]
 
 const normalizePhone = (value: string) => value.replace(/\D/g, "").slice(0, 10)
 
@@ -21,19 +32,44 @@ const normalizePlate = (value: string) =>
         .replace(/[^A-Z0-9-]/g, "")
         .slice(0, 8)
 
+const toISODateLocal = (date: Date) => {
+    const y = date.getFullYear()
+    const m = String(date.getMonth() + 1).padStart(2, "0")
+    const d = String(date.getDate()).padStart(2, "0")
+    return `${y}-${m}-${d}`
+}
+
+const stripTime = (date: Date) => {
+    const d = new Date(date)
+    d.setHours(0, 0, 0, 0)
+    return d
+}
+
 export function SubCalendar() {
-    const [selectedDate, setSelectedDate] = useState("")
+    const [selectedDate, setSelectedDate] = useState("") // YYYY-MM-DD
     const [selectedTime, setSelectedTime] = useState("")
     const [formState, setFormState] = useState<FormState>("idle")
     const [isLoadingSlots, setIsLoadingSlots] = useState(false)
-    const [formData, setFormData] = useState({
-        name: "",
-        phone: "",
-        plate: "",
-        email: ""
-    })
-    const [errors, setErrors] = useState<Record<string, string>>({})
 
+    const [bookedDates, setBookedDates] = useState<Set<string>>(new Set())
+    const [isLoadingAvailability, setIsLoadingAvailability] = useState(false)
+
+    const selectedDateObj = useMemo(
+        () => (selectedDate ? stripTime(new Date(selectedDate)) : undefined),
+        [selectedDate]
+    )
+
+    // Fecha corta para el botón del calendario
+    const formattedSelectedDate = useMemo(() => {
+        if (!selectedDateObj) return ""
+        return new Intl.DateTimeFormat("es-EC", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        }).format(selectedDateObj)
+    }, [selectedDateObj])
+
+    // Fecha larga para el resumen (izquierda)
     const formattedDate = useMemo(() => {
         if (!selectedDate) return ""
         try {
@@ -47,13 +83,116 @@ export function SubCalendar() {
         }
     }, [selectedDate])
 
-    const handleDateChange = (date: string) => {
-        setSelectedDate(date)
+    useEffect(() => {
+        let cancelled = false
+
+        const loadAvailability = async () => {
+            setIsLoadingAvailability(true)
+            try {
+                const today = stripTime(new Date())
+                const plusTwoMonths = new Date(today)
+                plusTwoMonths.setMonth(plusTwoMonths.getMonth() + 2)
+
+                const from = toISODateLocal(today)
+                const to = toISODateLocal(plusTwoMonths)
+
+                const res = await fetch(
+                    `/api/automotriz/disponibilidad?from=${from}&to=${to}`
+                )
+
+                if (!res.ok) {
+                    console.error("[Disponibilidad] Respuesta no OK:", res.status)
+                    return
+                }
+
+                const data: { bookedDates?: string[] } = await res.json()
+                if (!cancelled && data.bookedDates) {
+                    setBookedDates(new Set(data.bookedDates))
+                }
+            } catch (err) {
+                console.error("[Disponibilidad] Error al cargar:", err)
+            } finally {
+                if (!cancelled) setIsLoadingAvailability(false)
+            }
+        }
+
+        loadAvailability()
+        return () => {
+            cancelled = true
+        }
+    }, [])
+
+    const [formData, setFormData] = useState({
+        name: "",
+        phone: "",
+        plate: "",
+        email: ""
+    })
+
+    const [paymentProofFile, setPaymentProofFile] = useState<File | null>(null)
+    const [errors, setErrors] = useState<Record<string, string>>({})
+
+    const handleDateSelect = (date: Date | undefined) => {
+        if (!date) {
+            setSelectedDate("")
+            setSelectedTime("")
+            return
+        }
+
+        const clean = stripTime(date)
+        const iso = toISODateLocal(clean)
+
+        if (bookedDates.has(iso)) {
+            setSelectedDate("")
+            setSelectedTime("")
+            setErrors((prev) => ({
+                ...prev,
+                date: "Lo sentimos, ese día ya está reservado por completo."
+            }))
+            return
+        }
+
+        setSelectedDate(iso)
         setSelectedTime("")
         setErrors((prev) => ({ ...prev, date: "" }))
-        // CONNECT: Fetch available time slots from backend/Calendly API
+
         setIsLoadingSlots(true)
         setTimeout(() => setIsLoadingSlots(false), 800)
+    }
+
+    const handlePaymentProofChange = (file: File | null) => {
+        if (!file) {
+            setPaymentProofFile(null)
+            setErrors((prev) => ({
+                ...prev,
+                paymentProof: "Debes subir la captura del comprobante para confirmar tu reserva."
+            }))
+            return
+        }
+
+        if (!ACCEPTED_FILE_TYPES.includes(file.type as (typeof ACCEPTED_FILE_TYPES)[number])) {
+            setPaymentProofFile(null)
+            setErrors((prev) => ({
+                ...prev,
+                paymentProof: "Formato no permitido. Usa imagen o PDF."
+            }))
+            return
+        }
+
+        if (file.size > MAX_FILE_SIZE_BYTES) {
+            setPaymentProofFile(null)
+            setErrors((prev) => ({
+                ...prev,
+                paymentProof: "El archivo supera el tamaño máximo permitido."
+            }))
+            return
+        }
+
+        setPaymentProofFile(file)
+        setErrors((prev) => {
+            const { paymentProof, ...rest } = prev
+            return rest
+        })
     }
 
     const validateForm = () => {
@@ -81,7 +220,16 @@ export function SubCalendar() {
         }
 
         if (!selectedDate) newErrors.date = "Selecciona una fecha"
+        else if (bookedDates.has(selectedDate)) {
+            newErrors.date = "Ese día ya está reservado. Elige otra fecha."
+        }
+
         if (!selectedTime) newErrors.time = "Selecciona una hora"
+
+        if (!paymentProofFile) {
+            newErrors.paymentProof =
+                "Debes subir la captura del comprobante para confirmar tu reserva."
+        }
 
         setErrors(newErrors)
         return Object.keys(newErrors).length === 0
@@ -94,27 +242,50 @@ export function SubCalendar() {
 
         setFormState("loading")
 
-        // CONNECT: Submit to backend API or Calendly
         try {
-            await new Promise((resolve) => setTimeout(resolve, 1500))
+            const payload = new FormData()
+            payload.append("name", formData.name.trim())
+            payload.append("phone", normalizePhone(formData.phone))
+            payload.append("plate", normalizePlate(formData.plate))
+            payload.append("email", formData.email.trim())
+            payload.append("date", selectedDate)
+            payload.append("time", selectedTime)
+            payload.append("depositAmount", String(DEPOSIT_AMOUNT))
+
+            if (paymentProofFile) {
+                payload.append("paymentProof", paymentProofFile)
+            }
+
+            const response = await fetch("/api/automotriz/reservas", {
+                method: "POST",
+                body: payload
+            })
+
+            if (!response.ok) {
+                throw new Error("Error al procesar la reserva")
+            }
+
             setFormState("success")
 
-            // Reset form after success
             setTimeout(() => {
                 setFormState("idle")
                 setFormData({ name: "", phone: "", plate: "", email: "" })
                 setSelectedDate("")
                 setSelectedTime("")
+                setPaymentProofFile(null)
                 setErrors({})
             }, 5000)
-        } catch {
+        } catch (error) {
+            console.error(error)
             setFormState("error")
         }
     }
 
+    const isSubmitDisabled = formState === "loading" || !paymentProofFile
+
     return (
         <section
-            id="calendar"
+            id="booking-calendar"
             className="relative py-12 sm:py-16 lg:py-16 bg-white scroll-mt-20 overflow-hidden"
             aria-labelledby="calendar-heading"
         >
@@ -140,32 +311,29 @@ export function SubCalendar() {
                         Agenda con nosotros
                     </h2>
                     <p className="text-lg text-[var(--color-text-muted)] text-pretty max-w-[50ch] mx-auto">
-                        Elige día y hora, ingresa tus datos y confirma. Te contactaremos por WhatsApp en
-                        minutos.
+                        Elige día y hora, ingresa tus datos, realiza la transferencia y sube el comprobante.
+                        Te confirmamos por WhatsApp.
                     </p>
                 </div>
 
                 <div className="bg-gradient-to-br from-[#543fb2]/7 to-[#8acbef]/10 p-5 sm:p-7 lg:p-8 rounded-[var(--radius)] shadow-[var(--shadow-3)] border border-white/60 backdrop-blur">
                     {formState === "success" ? (
-                        <div
-                            className="text-center py-10 sm:py-12"
-                            aria-live="polite"
-                        >
+                        <div className="text-center py-10 sm:py-12" aria-live="polite">
                             <CheckCircle2
                                 className="h-16 w-16 text-emerald-500 mx-auto mb-4"
                                 aria-hidden="true"
                             />
                             <h3 className="text-2xl font-bold mb-2">
-                                ¡Listo! Tu solicitud de reserva fue enviada.
+                                ¡Listo! Tu reserva fue enviada.
                             </h3>
                             <p className="text-sm sm:text-base text-[var(--color-text-muted)] max-w-[40ch] mx-auto">
-                                Te contactaremos por WhatsApp para confirmar la hora exacta y enviarte los
-                                detalles de pago del depósito.
+                                Revisaremos el comprobante y te confirmaremos por WhatsApp y correo el estado
+                                de tu cita.
                             </p>
                         </div>
                     ) : (
                         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1.1fr)] items-start">
-                            {/* Columna izquierda: info y resumen */}
+                            {/* Columna izquierda: info + resumen */}
                             <div className="space-y-5">
                                 {/* Stepper simple */}
                                 <div className="rounded-[var(--radius)] bg-white/90 border border-[var(--color-border)]/70 p-4 shadow-sm">
@@ -189,9 +357,9 @@ export function SubCalendar() {
                                                 2
                                             </span>
                                             <div>
-                                                <p className="font-medium text-gray-900">Ingresa tus datos</p>
+                                                <p className="font-medium text-gray-900">Realiza la transferencia</p>
                                                 <p className="text-xs text-[var(--color-text-muted)]">
-                                                    Usamos tu WhatsApp y email solo para coordinar tu cita.
+                                                    Usa los datos de la cuenta bancaria y guarda la captura del comprobante.
                                                 </p>
                                             </div>
                                         </li>
@@ -200,53 +368,31 @@ export function SubCalendar() {
                                                 3
                                             </span>
                                             <div>
-                                                <p className="font-medium text-gray-900">Confirmación y depósito</p>
+                                                <p className="font-medium text-gray-900">
+                                                    Sube el comprobante y confirma
+                                                </p>
                                                 <p className="text-xs text-[var(--color-text-muted)]">
-                                                    Te confirmamos por WhatsApp y te indicamos cómo pagar el depósito de{" "}
-                                                    <span className="font-semibold">$20</span>.
+                                                    Validamos el pago y te confirmamos por WhatsApp y correo.
                                                 </p>
                                             </div>
                                         </li>
                                     </ol>
                                 </div>
 
-                                {/* Resumen de reserva */}
-                                <div className="rounded-[var(--radius)] bg-white/90 border border-[var(--color-primary)]/25 p-4 shadow-sm">
-                                    <p className="text-xs font-semibold text-[var(--color-primary)] tracking-wide uppercase mb-2">
-                                        Tu reserva
-                                    </p>
-                                    <div className="space-y-1 text-sm">
-                                        <p className="flex justify-between gap-3">
-                                            <span className="text-[var(--color-text-muted)]">Fecha:</span>
-                                            <span className="font-medium text-gray-900">
-                                                {formattedDate || "Por seleccionar"}
-                                            </span>
-                                        </p>
-                                        <p className="flex justify-between gap-3">
-                                            <span className="text-[var(--color-text-muted)]">Hora:</span>
-                                            <span className="font-medium text-gray-900">
-                                                {selectedTime || "Por seleccionar"}
-                                            </span>
-                                        </p>
-                                        <p className="flex justify-between gap-3">
-                                            <span className="text-[var(--color-text-muted)]">Depósito:</span>
-                                            <span className="font-medium text-gray-900">$20</span>
-                                        </p>
-                                    </div>
-                                    <p className="mt-3 text-[11px] text-[var(--color-text-muted)]">
-                                        El depósito se descuenta del valor total de tu servicio el día de la cita.
-                                    </p>
-                                </div>
+                                <BookingSummary
+                                    formattedDate={formattedDate}
+                                    selectedTime={selectedTime}
+                                    depositAmount={DEPOSIT_AMOUNT}
+                                />
 
-                                {/* Aviso privacidad */}
                                 <div className="flex items-start gap-2 text-[11px] text-[var(--color-text-muted)]">
                                     <AlertCircle
                                         className="h-4 w-4 flex-shrink-0 mt-0.5"
                                         aria-hidden="true"
                                     />
                                     <p>
-                                        Protegemos tus datos. No los compartimos con terceros y solo los usamos para
-                                        coordinar tu servicio de Revisión Técnica Vehicular.
+                                        Nunca te pediremos claves, tokens ni códigos de tu banco. Solo verificamos
+                                        el comprobante que tú adjuntas.
                                     </p>
                                 </div>
                             </div>
@@ -260,21 +406,92 @@ export function SubCalendar() {
                                 {/* Fecha y hora */}
                                 <div className="grid gap-4 sm:grid-cols-2">
                                     <div>
-                                        <Label htmlFor="date" className="flex items-center gap-2 mb-1.5">
+                                        <Label className="flex items-center gap-2 mb-1.5">
                                             <CalendarIcon className="h-4 w-4" aria-hidden="true" />
                                             Fecha
                                         </Label>
-                                        <Input
-                                            id="date"
-                                            type="date"
-                                            value={selectedDate}
-                                            onChange={(e) => handleDateChange(e.target.value)}
-                                            min={new Date().toISOString().split("T")[0]}
-                                            className="h-11 text-sm"
-                                            aria-invalid={!!errors.date}
-                                            aria-describedby={errors.date ? "date-error" : undefined}
-                                            required
-                                        />
+
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    type="button"
+                                                    variant="outline"
+                                                    className="w-full h-11 px-3 text-xs sm:text-sm flex items-center justify-between gap-2"
+                                                    aria-invalid={!!errors.date}
+                                                    aria-describedby={errors.date ? "date-error" : undefined}
+                                                >
+                                                    <span className="flex-1 text-left truncate">
+                                                        {selectedDateObj ? (
+                                                            formattedSelectedDate
+                                                        ) : (
+                                                            <span className="text-gray-400">
+                                                                Selecciona una fecha
+                                                            </span>
+                                                        )}
+                                                    </span>
+                                                    <CalendarIcon className="h-4 w-4 opacity-70 flex-shrink-0" />
+                                                </Button>
+                                            </PopoverTrigger>
+
+                                            <PopoverContent
+                                                align="start"
+                                                className="p-2 bg-white rounded-[var(--radius)] border border-[var(--color-border)] shadow-lg"
+                                            >
+                                                <Calendar
+                                                    mode="single"
+                                                    selected={selectedDateObj}
+                                                    onSelect={handleDateSelect}
+                                                    initialFocus
+                                                    // Deshabilitar días pasados y días ocupados
+                                                    disabled={(date) => {
+                                                        const d = stripTime(date)
+                                                        const today = stripTime(new Date())
+                                                        const iso = toISODateLocal(d)
+                                                        return d < today || bookedDates.has(iso)
+                                                    }}
+                                                    modifiers={{
+                                                        booked: (date) => {
+                                                            const iso = toISODateLocal(stripTime(date))
+                                                            return bookedDates.has(iso)
+                                                        },
+                                                        available: (date) => {
+                                                            const d = stripTime(date)
+                                                            const today = stripTime(new Date())
+                                                            const iso = toISODateLocal(d)
+                                                            return d >= today && !bookedDates.has(iso)
+                                                        }
+                                                    }}
+                                                    modifiersClassNames={{
+                                                        booked:
+                                                            "bg-red-500 text-white hover:bg-red-500 hover:text-white opacity-70 cursor-not-allowed",
+                                                        available:
+                                                            "bg-emerald-50 text-emerald-700 hover:bg-emerald-100 hover:text-emerald-800"
+                                                    }}
+                                                    className="rounded-[var(--radius)]"
+                                                />
+                                                <p className="mt-1 text-[11px] text-[var(--color-text-muted)]">
+                                                    <span className="inline-block w-3 h-3 rounded-full bg-red-500 mr-1" />
+                                                    Días en rojo: ya reservados.{" "}
+                                                    <span className="inline-block w-3 h-3 rounded-full bg-emerald-400 mr-1 ml-2" />
+                                                    Días en verde: disponibles.
+                                                </p>
+                                            </PopoverContent>
+                                        </Popover>
+
+                                        {isLoadingAvailability && !errors.date && (
+                                            <p className="text-xs text-[var(--color-text-muted)] mt-1">
+                                                Comprobando disponibilidad…
+                                            </p>
+                                        )}
+
+                                        {selectedDate &&
+                                            !bookedDates.has(selectedDate) &&
+                                            !errors.date && (
+                                                <p className="text-xs text-emerald-600 mt-1">
+                                                    Día disponible para agendar.
+                                                </p>
+                                            )}
+
                                         {errors.date && (
                                             <p
                                                 id="date-error"
@@ -301,7 +518,9 @@ export function SubCalendar() {
                                             <div className="flex flex-wrap gap-2">
                                                 {timeSlots.map((slot) => {
                                                     const isActive = selectedTime === slot
-                                                    const isDisabled = !selectedDate
+                                                    const isDisabled =
+                                                        !selectedDate || bookedDates.has(selectedDate)
+
                                                     return (
                                                         <button
                                                             key={slot}
@@ -339,15 +558,13 @@ export function SubCalendar() {
                                     </div>
                                 </div>
 
-                                {/* Info depósito */}
-                                <div className="p-3 rounded-[var(--radius)] bg-[var(--color-accent)]/10 border border-[var(--color-accent)]/60 text-xs sm:text-sm">
-                                    <p className="font-medium text-gray-900">
-                                        Reserva tu cita con <span className="text-[var(--color-primary)]">$20</span>.
-                                    </p>
-                                    <p className="text-[var(--color-text-muted)]">
-                                        Monto reembolsable o descontable del total el día de tu revisión.
-                                    </p>
-                                </div>
+                                {/* Datos de pago (transferencia + comprobante) */}
+                                <BankTransferSection
+                                    account={BANK_ACCOUNT}
+                                    paymentProofFile={paymentProofFile}
+                                    paymentProofError={errors.paymentProof}
+                                    onPaymentProofChange={handlePaymentProofChange}
+                                />
 
                                 {/* Datos de contacto */}
                                 <div className="grid gap-4 sm:grid-cols-2">
@@ -386,7 +603,10 @@ export function SubCalendar() {
                                             autoComplete="tel"
                                             value={formData.phone}
                                             onChange={(e) =>
-                                                setFormData((prev) => ({ ...prev, phone: normalizePhone(e.target.value) }))
+                                                setFormData((prev) => ({
+                                                    ...prev,
+                                                    phone: normalizePhone(e.target.value)
+                                                }))
                                             }
                                             placeholder="0999999999"
                                             className="h-11 mt-1 text-sm"
@@ -443,7 +663,10 @@ export function SubCalendar() {
                                             autoComplete="email"
                                             value={formData.email}
                                             onChange={(e) =>
-                                                setFormData((prev) => ({ ...prev, email: e.target.value.trim() }))
+                                                setFormData((prev) => ({
+                                                    ...prev,
+                                                    email: e.target.value.trim()
+                                                }))
                                             }
                                             placeholder="tu@email.com"
                                             className="h-11 mt-1 text-sm"
@@ -463,38 +686,46 @@ export function SubCalendar() {
                                     </div>
                                 </div>
 
-                                {/* Aviso de seguridad / privacidad ya reforzado arriba, aquí solo recordatorio */}
+                                {/* Aviso de seguridad */}
                                 <div className="flex items-start gap-2 text-[11px] text-[var(--color-text-muted)]">
                                     <CheckCircle2
                                         className="h-4 w-4 flex-shrink-0 mt-0.5 text-emerald-500"
                                         aria-hidden="true"
                                     />
                                     <p>
-                                        Tus datos viajan cifrados (HTTPS) y se usan únicamente para coordinar y
-                                        confirmar tu cita.
+                                        Tus datos y comprobantes se procesan en servidores seguros. No
+                                        almacenamos claves ni tokens bancarios, solo el comprobante que tú
+                                        adjuntas.
                                     </p>
                                 </div>
 
                                 {/* Botón enviar */}
-                                <Button
-                                    type="submit"
-                                    size="lg"
-                                    disabled={formState === "loading"}
-                                    className="w-full h-12 bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-[0_18px_40px_rgba(15,23,42,0.4)] hover:-translate-y-0.5"
-                                    data-analytics="cta_calendar_confirmar"
-                                >
-                                    {formState === "loading" ? (
-                                        <>
-                                            <span
-                                                className="inline-block h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"
-                                                aria-hidden="true"
-                                            />
-                                            Procesando...
-                                        </>
-                                    ) : (
-                                        "Confirmar reserva"
+                                <div className="space-y-1">
+                                    <Button
+                                        type="submit"
+                                        size="lg"
+                                        disabled={isSubmitDisabled}
+                                        className="w-full h-12 bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-[0_18px_40px_rgba(15,23,42,0.4)] hover:-translate-y-0.5"
+                                        data-analytics="cta_calendar_confirmar"
+                                    >
+                                        {formState === "loading" ? (
+                                            <>
+                                                <span
+                                                    className="inline-block h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"
+                                                    aria-hidden="true"
+                                                />
+                                                Procesando...
+                                            </>
+                                        ) : (
+                                            "Confirmar reserva"
+                                        )}
+                                    </Button>
+                                    {!paymentProofFile && (
+                                        <p className="text-[11px] text-center text-[var(--color-text-muted)]">
+                                            Sube la captura del comprobante para habilitar la confirmación.
+                                        </p>
                                     )}
-                                </Button>
+                                </div>
 
                                 {formState === "error" && (
                                     <div

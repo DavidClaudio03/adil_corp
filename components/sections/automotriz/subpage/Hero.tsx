@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 
 export function SubHeroAuto() {
     const handlePrimaryCTA = () => {
-        document.getElementById("calendar")?.scrollIntoView({ behavior: "smooth" })
+        document.getElementById("booking-calendar")?.scrollIntoView({ behavior: "smooth" })
     }
 
     const handleWhatsAppCTA = () => {

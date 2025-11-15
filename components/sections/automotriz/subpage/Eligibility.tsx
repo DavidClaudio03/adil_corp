@@ -39,7 +39,7 @@ export function SubEligibility() {
                         id="eligibility-heading"
                         className="text-3xl font-bold tracking-tight sm:text-4xl text-balance mb-3"
                     >
-                        Vehículos admitidos para servicio ejecutivo
+                        Vehículos admitidos para servicio técnico
                     </h2>
                     <p className="text-sm sm:text-base text-[var(--color-text-muted)] text-pretty max-w-[60ch] mx-auto">
                         En menos de 30 segundos puedes saber si tu vehículo califica. Así evitamos sorpresas
