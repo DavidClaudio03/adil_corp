@@ -1,6 +1,6 @@
 "use client"
 
-import { Calendar, FileCheck, Car, CheckCircle, Award } from "lucide-react"
+import { Calendar, MapPinHouse, Car, CheckCircle, BadgeCheck } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import { Badge } from "@/components/ui/badge"
 
@@ -10,28 +10,28 @@ const steps = [
     {
         icon: Calendar,
         title: "Agenda tu cita",
-        description: "Elige fecha y hora en nuestro calendario. Confirmación inmediata."
+        description: "Reserva tu servicio en línea con confirmación inmediata."
     },
     {
-        icon: FileCheck,
-        title: "Prepara documentos",
-        description: "Matrícula vigente y cédula del propietario. Te enviamos checklist."
+        icon: MapPinHouse,
+        title: "Recogemos tu vehículo",
+        description: "Vamos a tu ubicación y trasladamos el vehículo para su revisión."
     },
     {
         icon: Car,
-        title: "Llega a tu turno",
-        description: "Sin filas. Directo a inspección con tu asesor dedicado."
+        title: "Revisión inicial",
+        description: "Evaluamos el estado real del vehículo según parámetros de la RTV."
     },
     {
         icon: CheckCircle,
-        title: "Inspección rápida",
-        description: "Revisión de parámetros clave. Informe detallado al instante."
+        title: "Aprobación del cliente",
+        description: "Te indicamos los correctivos necesarios y tú autorizas los trabajos."
     },
     {
-        icon: Award,
-        title: "Informe técnico",
+        icon: BadgeCheck,
+        title: "Mantenimientos y entrega final",
         description:
-            "Documento que avala que el vehículo está en óptimas condiciones para aprobar la RTV."
+            "Realizamos los ajustes autorizados y entregamos el vehículo listo para RTV."
     }
 ]
 
@@ -93,8 +93,7 @@ export function SubProcess() {
                         Proceso simple en 5 pasos
                     </h2>
                     <p className="text-lg text-[var(--color-text-muted)] text-pretty max-w-[60ch] mx-auto">
-                        De la reserva al certificado en menos de una hora. Tú manejas, nosotros nos encargamos
-                        del resto.
+                        Pasos definitivos - claros, cortos y faciles de escanear para que tu vehículo esté listo para la RTV.
                     </p>
                 </div>
 
@@ -227,37 +226,37 @@ export function SubProcess() {
                             <ul className="space-y-1.5 text-xs text-[var(--color-text-muted)]">
                                 {activeStep === 0 && (
                                     <>
-                                        <li>• Busca el día que mejor se adapte a tu agenda.</li>
-                                        <li>• Escoge un horario con margen para llegar con calma.</li>
-                                        <li>• Recibirás la confirmación por WhatsApp y correo.</li>
+                                        <li>• Selecciona la fecha y horario que más te convenga.</li>
+                                        <li>• Completa los datos del vehículo y tu contacto para confirmar la recogida.</li>
+                                        <li>• Recibirás la confirmación y los detalles por WhatsApp y correo.</li>
                                     </>
                                 )}
                                 {activeStep === 1 && (
                                     <>
-                                        <li>• Ten a mano tu cédula y matrícula vigente.</li>
-                                        <li>• Te enviaremos un checklist para que no se te pase nada.</li>
-                                        <li>• Si tienes dudas, puedes responder directo al WhatsApp.</li>
+                                        <li>• Deja las llaves y acceso al vehículo disponibles para el equipo.</li>
+                                        <li>• Asegura un punto de encuentro claro y que el vehículo esté en condiciones de circular.</li>
+                                        <li>• Recibirás un aviso de llegada y seguimiento por WhatsApp.</li>
                                     </>
                                 )}
                                 {activeStep === 2 && (
                                     <>
-                                        <li>• Llega unos minutos antes de tu hora programada.</li>
-                                        <li>• Te esperará un asesor para guiarte en todo el proceso.</li>
-                                        <li>• Olvídate de filas o desorden en el punto de revisión.</li>
+                                        <li>• Realizamos una inspección completa de luces, frenos, emisiones y seguridad.</li>
+                                        <li>• Documentamos hallazgos con fotos y mediciones cuando aplica.</li>
+                                        <li>• Te entregamos un diagnóstico inicial y recomendaciones de corrección.</li>
                                     </>
                                 )}
                                 {activeStep === 3 && (
                                     <>
-                                        <li>• Revisamos parámetros clave que pide la RTV.</li>
-                                        <li>• Te explicamos cualquier hallazgo de forma clara.</li>
-                                        <li>• Si hace falta un ajuste menor, te recomendamos opciones.</li>
+                                        <li>• Te presentamos el informe técnico con los correctivos necesarios.</li>
+                                        <li>• Acordamos qué trabajos autorizarás y el presupuesto estimado.</li>
+                                        <li>• Firmas la autorización (digital o física) para proceder con las intervenciones.</li>
                                     </>
                                 )}
                                 {activeStep === 4 && (
                                     <>
-                                        <li>• Recibes tu informe técnico consolidado.</li>
-                                        <li>• El documento respalda que tu vehículo está listo para RTV.</li>
-                                        <li>• Guardamos un respaldo digital por si lo necesitas después.</li>
+                                        <li>• Realizamos los mantenimientos y ajustes autorizados.</li>
+                                        <li>• Entregamos el informe final y comprobantes de trabajo realizados.</li>
+                                        <li>• Devolvemos el vehículo y ofrecemos seguimiento post-servicio por 30 días.</li>
                                     </>
                                 )}
                             </ul>

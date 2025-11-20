@@ -3,71 +3,88 @@
 import { Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge";
+import { features } from "process";
 
 const badgeText = "Precios"
 
 const plans = [
     {
         id: "base",
-        name: "Servicio base",
+        name: "Plan Ejecutivo RTV",
         tag: "Esencial",
-        price: "$50",
+        price: "$60",
         frequency: "por servicio",
-        description: "Informe de inspección técnica completo para tu RTV.",
+        description: "Revisión técnica completa a domicilio para preparar tu vehículo bajo los parámetros oficiales.",
         recommended: false,
-        highlight: "Perfecto si quieres una revisión clara y económica.",
+        highlight: "Incluye informes antes y después, correcciones básicas y recomendaciones detalladas para tu presentación en RTV.",
+        featuresTitle: "Incluye:",
         features: [
-            "Revisión visual y electrónica básica",
-            "Informe listo para imprimir",
-            "Orientación sobre resultados"
-        ]
+            "Servicio puerta a puerta",
+            "Revisión técnica completa (luces, emisiones, seguridad, niveles)",
+            "Informe técnico previo",
+            "Informe técnico posterior",
+            "Asesoría continua por WhatsApp"
+        ],
+        excludesTitle: "No incluye:",
+        excludesNote: "Reparaciones complejas de frenos, suspensión, motor, llantas o trabajos de desmontaje profundo.",
+        extrasTitle: "Extras opcionales:",
+        extrasNote: "Con autorización del cliente, podemos gestionar las correcciones adicionales necesarias para dejar el vehículo listo."
     },
     {
         id: "ejecutivo",
-        name: "Servicio ejecutivo",
+        name: "Plan Full Ejecutivo RTV",
         tag: "Más elegido",
-        price: "$75",
+        price: "$80",
         frequency: "por servicio",
-        description: "Asesoría RTV + inspección + acompañamiento dedicado en todo el proceso.",
+        description: "Todo lo del Plan Ejecutivo RTV, más traslado del vehículo, acompañamiento técnico y presentación en el turno oficial.",
         recommended: true,
-        highlight: "La opción recomendada para olvidarte de filas, estrés y rechazos.",
+        featuresTitle: "Inluye:",
         features: [
-            "Pre-revisión completa del vehículo",
-            "Coordinamos el proceso RTV por ti",
-            "Asesor dedicado hasta la aprobación",
-            "Recordatorios y soporte por WhatsApp"
-        ]
+
+            "Todo lo del Plan Ejecutivo RTV",
+            "Traslado del vehículo a la estación de RTV",
+            "Presentación en el turno asignado",
+            "Gestión del turno si el cliente no lo tiene reservado",
+            "Acompañamiento técnico durante la inspección",
+            "Devolución del vehículo al domicilio"
+        ],
+        excludesTitle: "No incluye:",
+        excludesNote: "Reparaciones complejas ni intervenciones dentro del centro RTV.",
+        extrasTitle: "Extras opcionales:",
+        extrasNote: "Con autorización del cliente, podemos realizar las correcciones necesarias para su posterior presentación."
     },
     {
-        id: "express",
-        name: "Revisión express",
-        tag: "Full gestión",
-        price: "$95",
-        frequency: "por servicio",
-        description: "Nos encargamos de la aprobación RTV por ti*.",
+        id: "adicional",
+        name: "Servicio Adicional RTV",
+        tag: "Complementario",
+        description: "El objetivo es dejar el vehículo en condiciones óptimas para su presentación oficial.",
         recommended: false,
-        highlight: "Ideal si no tienes tiempo y quieres todo resuelto.",
+        featuresTitle: "Correcciones básicas",
         features: [
-            "Gestión prioritaria del trámite*",
-            "Menos tiempos muertos y esperas",
-            "Reporte final con el estado del vehículo"
+
+            "Ajuste de luces",
+            "Focos",
+            "Emisiones de gases básicas",
+            "Kit de seguridad",
+            "Nivel de fluidos",
+            "Otros elementos de revisión rápida"
         ],
-        footnote: "*Previa autorización escrita."
+        advancedFeaturesTitle: "Correcciones avanzadas:",
+        advancedFeatures: [
+            "Frenos",
+            "Suspensión",
+            "Motor",
+            "Llantas",
+            "Sistema de emisiones"
+        ],
+        extrasTitle: "Valor variable según diagnóstico y tipo de servicio."
     }
 ]
 
 export function SubPricing() {
     const handleCTA = () => {
-        document.getElementById("calendar")?.scrollIntoView({ behavior: "smooth" })
+        document.getElementById("booking-calendar")?.scrollIntoView({ behavior: "smooth" })
     }
-
-    const extras = {
-        title: "Servicios adicionales",
-        description:
-            "Reparaciones como focos, análisis de emisiones, kit de emergencia y más para que tu vehículo llegue 100% listo.",
-        details: "Valor variable según diagnóstico y tipo de servicio."
-    }
-
     return (
         <section
             className="relative py-12 sm:py-16 lg:py-20 overflow-hidden bg-white"
@@ -220,6 +237,15 @@ export function SubPricing() {
                                     {plan.highlight}
                                 </p>
 
+                                <h4
+                                    className={[
+                                        "text-sm font-semibold mb-2",
+                                        plan.recommended ? "text-white" : "text-gray-900"
+                                    ].join(" ")}
+                                >
+                                    {plan.featuresTitle}
+                                </h4>
+
                                 {/* Lista de beneficios */}
                                 <ul className="space-y-2 text-sm mb-4 flex-1">
                                     {plan.features.map((feature) => (
@@ -239,20 +265,85 @@ export function SubPricing() {
                                                 }
                                             >
                                                 {feature}
+
                                             </span>
                                         </li>
                                     ))}
                                 </ul>
+                                <h4
+                                    className={[
+                                        "text-sm font-semibold mb-2",
+                                        plan.recommended ? "text-white" : "text-gray-900"
+                                    ].join(" ")}
+                                >
+                                    {plan.advancedFeaturesTitle}
+                                </h4>
+                                {plan.advancedFeatures && (
+                                    <ul className="space-y-2 text-sm mb-4 flex-1">
+                                        {plan.advancedFeatures.map((feature) => (
+                                            <li key={feature} className="flex items-start gap-2">
+                                                <Check
+                                                    className={[
+                                                        "h-4 w-4 mt-0.5 flex-shrink-0",
+                                                        plan.recommended
+                                                            ? "text-emerald-300"
+                                                            : "text-[var(--color-primary)]"
+                                                    ].join(" ")}
+                                                    aria-hidden="true"
+                                                />
+                                                <span
+                                                    className={
+                                                        plan.recommended ? "text-white/90" : "text-gray-800"
+                                                    }
+                                                >
+                                                    {feature}
+                                                </span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
 
-                                {plan.footnote && (
-                                    <p
-                                        className={[
-                                            "text-[11px] mb-3",
-                                            plan.recommended ? "text-white/70" : "text-[var(--color-text-muted)]"
-                                        ].join(" ")}
-                                    >
-                                        {plan.footnote}
-                                    </p>
+                                {/* Exclusiones */}
+                                {plan.excludesTitle && (
+                                    <div className="mb-3">
+                                        <h4
+                                            className={[
+                                                "text-sm font-semibold mb-1",
+                                                plan.recommended ? "text-white" : "text-gray-900"
+                                            ].join(" ")}
+                                        >
+                                            {plan.excludesTitle}
+                                        </h4>
+                                        <p
+                                            className={[
+                                                "text-xs",
+                                                plan.recommended ? "text-white/70" : "text-[var(--color-text-muted)]"
+                                            ].join(" ")}
+                                        >
+                                            {plan.excludesNote}
+                                        </p>
+                                    </div>
+                                )}
+                                {/* Extras */}
+                                {plan.extrasTitle && (
+                                    <div className="mb-3">
+                                        <h4
+                                            className={[
+                                                "text-sm font-semibold mb-1",
+                                                plan.recommended ? "text-white" : "text-gray-900"
+                                            ].join(" ")}
+                                        >
+                                            {plan.extrasTitle}
+                                        </h4>
+                                        <p
+                                            className={[
+                                                "text-xs",
+                                                plan.recommended ? "text-white/70" : "text-[var(--color-text-muted)]"
+                                            ].join(" ")}
+                                        >
+                                            {plan.extrasNote}
+                                        </p>
+                                    </div>
                                 )}
 
                                 {/* CTA del card */}
@@ -297,26 +388,6 @@ export function SubPricing() {
                         >
                             Ir al calendario
                         </Button>
-                    </div>
-                </div>
-
-                {/* Servicios adicionales */}
-                <div className="mt-8 sm:mt-10">
-                    <div className="rounded-[var(--radius)] border border-dashed border-[var(--color-primary)]/40 bg-gradient-to-r from-[#f5f7ff] via-white to-[#e6f4ff] p-4 sm:p-5 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
-                        <div>
-                            <p className="text-sm font-semibold text-gray-900 flex items-center gap-2">
-                                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[var(--color-primary)]/10 text-[var(--color-primary)] text-xs font-bold">
-                                    +
-                                </span>
-                                {extras.title}
-                            </p>
-                            <p className="text-xs sm:text-sm text-[var(--color-text-muted)] mt-1 max-w-[60ch]">
-                                {extras.description}
-                            </p>
-                        </div>
-                        <p className="text-xs sm:text-sm font-medium text-[var(--color-primary)]">
-                            {extras.details}
-                        </p>
                     </div>
                 </div>
 

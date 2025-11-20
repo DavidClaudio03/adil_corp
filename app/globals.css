@@ -266,5 +266,98 @@
     }
   }
 
+
+  /* Borde degradado animado para botones tipo pill */
+  .border-animated {
+    position: relative;
+    z-index: 0;
+  }
+
+  .border-animated::before {
+    content: "";
+    position: absolute;
+    inset: -2px; /* borde un poquito afuera del botón */
+    border-radius: 9999px;
+    background: linear-gradient(90deg, #543fb2, #8acbef, #543fb2);
+    background-size: 300% 100%;
+    z-index: -1;
+    animation: borderMove 2.5s linear infinite;
+    opacity: 0.95;
+  }
+
+  /* Para que el fondo real del botón tape el centro y solo se vea el borde */
+  .border-animated::after {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    border-radius: 9999px;
+    background: inherit; /* respeta el bg del botón */
+    z-index: -1;
+  }
+
+  @keyframes borderMove {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  /* Posición base del botón de WhatsApp */
+  .whatsapp-floating-button {
+    position: fixed;
+    right: 1rem;
+    bottom: 5.5rem; /* desktop / tablets grandes */
+    z-index: 50;
+  }
+
+  /* Ajustes específicos para pantallas pequeñas */
+  @media (max-width: 1023px) {
+    .whatsapp-floating-button {
+      bottom: 4.5rem; /* posición normal sin sticky */
+    }
+
+    /* Cuando el sticky-mobile está visible (body con la clase) */
+    body.sticky-mobile-open .whatsapp-floating-button {
+      bottom: 9.5rem; /* súbelo por encima del sticky */
+    }
+
+      /* --- CORRECCIÓN CHATBOT CHATBASE --- */
+
+    /* 1. REGLA PARA PANTALLAS GRANDES (Desktop) 
+       Forzamos que el botón esté en su sitio original y visible.
+       Esto arregla que desaparezca en PC.
+    */
+    @media (min-width: 1024px) {
+      #chatbase-bubble-button,
+      iframe[src*="chatbase.co"] {
+        bottom: 20px !important; /* Posición estándar */
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+      }
+    }
+
+    /* 2. REGLA PARA MÓVILES (Cuando aparece el Sticky Menu)
+       Solo subimos el botón si la pantalla es menor a 1024px
+       Y si el body tiene la clase "sticky-mobile-open"
+    */
+    @media (max-width: 1023px) {
+      body.sticky-mobile-open #chatbase-bubble-button,
+      body.sticky-mobile-open iframe[src*="chatbase.co"] {
+        bottom: 100px !important; /* Ajusta esto según la altura de tu menú */
+        transition: bottom 0.3s ease-in-out;
+      }
+
+      /* Opcional: Mueve también la ventana del chat si está abierta */
+      body.sticky-mobile-open #chatbase-bubble-window {
+        bottom: 100px !important;
+      }
+    }
+  }
 }
 

@@ -21,6 +21,8 @@ export type BankAccountInfo = {
   email: string
   phone: string
   referenceNote?: string
+  notified_at?: string | null
+  notification_error_message?: string | null
 }
 
 export const BANK_ACCOUNT: BankAccountInfo = {
@@ -35,3 +37,4 @@ export const BANK_ACCOUNT: BankAccountInfo = {
 }
 
 export const DEPOSIT_AMOUNT = 20
+export const PAYMENT_PROOFS_BUCKET = "payment-proofs"
