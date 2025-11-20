@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer"
+import * as nodemailer from "nodemailer"
 import type { Booking } from "@/types/booking"
 import { supabaseServer } from "@/lib/supabase/server"
 import { PAYMENT_PROOFS_BUCKET } from "@/config/payment"
@@ -24,8 +24,28 @@ const transporter = nodemailer.createTransport({
   auth: {
     user: SMTP_USER,
     pass: SMTP_PASS
+  },
+  // Timeouts to fail faster and give clearer errors in logs
+  connectionTimeout: 20000, // 20s to establish TCP connection
+  greetingTimeout: 20000, // 20s to wait the SMTP greeting
+  socketTimeout: 20000, // 20s socket inactivity
+  // If you have issues with TLS validation (self-signed certs), you can
+  // set SMTP_TLS_REJECT_UNAUTHORIZED=false in your environment to allow
+  // connecting (not recommended for production unless you understand the risk).
+  tls: {
+    rejectUnauthorized: process.env.SMTP_TLS_REJECT_UNAUTHORIZED !== "false"
   }
-})
+});
+
+// Verificamos el transporte de forma asíncrona y no bloqueante al iniciar
+(async () => {
+  try {
+    await transporter.verify()
+    console.log('[Email] SMTP verificado: conexión OK')
+  } catch (err: any) {
+    console.warn('[Email] No se pudo verificar SMTP al iniciar:', err?.message ?? err)
+  }
+})()
 
 export async function sendBookingEmail(booking: Booking) {
   const fromName = SMTP_FROM_NAME || "AdilCorp Services"
@@ -101,14 +121,21 @@ Revisa el comprobante adjunto y el panel de administración para validar y confi
   <p>Se adjunta el comprobante de transferencia para tu revisión.</p>
   `.trim()
 
-  await transporter.sendMail({
-    from,
-    to: SMTP_FROM_EMAIL, // te llega a ti
-    subject: adminSubject,
-    text: adminText,
-    html: adminHtml,
-    attachments: attachments.length > 0 ? attachments : undefined
-  })
+  try {
+    await transporter.sendMail({
+      from,
+      to: SMTP_FROM_EMAIL, // te llega a ti
+      subject: adminSubject,
+      text: adminText,
+      html: adminHtml,
+      attachments: attachments.length > 0 ? attachments : undefined
+    })
+  } catch (err: any) {
+    console.error('[Email] Error enviando correo ADMIN:', err?.message ?? err)
+    // añadir más detalles de error si existen
+    if (err?.code) console.error('[Email] Código de error SMTP:', err.code)
+    throw err
+  }
 
   //
   // 3) Correo para el USUARIO (confirmación + respaldo)
@@ -163,14 +190,20 @@ AdilCorp Services
     <strong>AdilCorp Services</strong></p>
     `.trim()
 
-    await transporter.sendMail({
-      from,
-      to: booking.email,       // correo del usuario
-      replyTo: SMTP_FROM_EMAIL,
-      subject: userSubject,
-      text: userText,
-      html: userHtml,
-      attachments: attachments.length > 0 ? attachments : undefined
-    })
+    try {
+      await transporter.sendMail({
+        from,
+        to: booking.email,       // correo del usuario
+        replyTo: SMTP_FROM_EMAIL,
+        subject: userSubject,
+        text: userText,
+        html: userHtml,
+        attachments: attachments.length > 0 ? attachments : undefined
+      })
+    } catch (err: any) {
+      console.error('[Email] Error enviando correo USUARIO:', err?.message ?? err)
+      if (err?.code) console.error('[Email] Código de error SMTP:', err.code)
+      throw err
+    }
   }
 }
