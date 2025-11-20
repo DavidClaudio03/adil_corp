@@ -20,7 +20,7 @@ if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS || !SMTP_FROM_EMAIL) {
 const transporter = nodemailer.createTransport({
   host: SMTP_HOST,
   port: Number(SMTP_PORT),
-  secure: SMTP_SECURE === "false", // true = 465, false = 587 (STARTTLS)
+  secure: SMTP_SECURE === "true", // true = 465, false = 587 (STARTTLS)
   auth: {
     user: SMTP_USER,
     pass: SMTP_PASS
