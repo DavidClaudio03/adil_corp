@@ -42,8 +42,7 @@ export function SubEligibility() {
                         Vehículos admitidos para servicio técnico
                     </h2>
                     <p className="text-sm sm:text-base text-[var(--color-text-muted)] text-pretty max-w-[60ch] mx-auto">
-                        En menos de 30 segundos puedes saber si tu vehículo califica. Así evitamos sorpresas
-                        y hacemos la experiencia más rápida y clara para ti.
+                        Consulta si tu vehículo califica para este servicio, queremos darte el mejor servicio y nos enfocamos en modelos que conocemos muy bien para darte la mejor experiencia para aprobar tu RTV.
                     </p>
                 </div>
 

@@ -114,9 +114,8 @@ export function SubPricing() {
                         Elige el nivel de servicio que tu vehículo merece
                     </h2>
                     <p className="text-base sm:text-lg text-muted text-pretty max-w-[60ch] mx-auto">
-                        Sin sorpresas ni costos ocultos. Servicio ejecutivo recomendado desde{" "}
-                        <span className="font-semibold text-[var(--color-primary)]">$75</span> y opciones
-                        desde <span className="font-semibold">$50</span> según lo que necesites.
+                        Sin sorpresas ni costos ocultos. Servicios desde{" "}
+                        <span className="font-semibold text-[var(--color-primary)]">$60</span>
                     </p>
 
                     {/* Micro-banner: qué incluyen todos los planes */}

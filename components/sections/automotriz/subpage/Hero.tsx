@@ -30,15 +30,15 @@ export function SubHeroAuto() {
                     {/* Content */}
                     <div className="space-y-7">
                         <h1 className="text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
-                            Aprueba tu RTV sin filas —
+                            Preparación Técnica para la RTV —
                             <span className="block text-[var(--color-primary)]">
-                                agenda en minutos con nosotros
+                                Servicio Puerta a Puerta
                             </span>
                         </h1>
 
                         <p className="text-lg text-[var(--color-text-muted)] text-pretty max-w-[60ch]">
-                            Coordinamos todo el proceso por ti: pre-revisión, trámites y aprobación.
-                            Tú solo eliges el día y la hora, nosotros hacemos el resto.
+                            Evita rechazos y pérdida de tiempo. Revisamos tu vehículo según los parámetros oficiales de la RTV y
+                            te entregamos un informe técnico antes y después de las correcciones básicas.
                         </p>
 
                         {/* Mini-beneficios destacados */}
